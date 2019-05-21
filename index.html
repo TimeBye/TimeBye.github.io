@@ -1,0 +1,2277 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="回首向来萧瑟处，归去，也无风雨也无晴。">
+<meta name="keywords" content="kubernetes,docker">
+<meta property="og:type" content="website">
+<meta property="og:title" content="拾穗">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="拾穗">
+<meta property="og:description" content="回首向来萧瑟处，归去，也无风雨也无晴。">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="拾穗">
+<meta name="twitter:description" content="回首向来萧瑟处，归去，也无风雨也无晴。">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>拾穗</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left 
+  page-home">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拾穗</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home menu-item-active">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-schedule">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/schedule/" rel="section"><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>Schedule</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>Sitemap</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/Runner部署/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="setzero">
+      <meta itemprop="description" content="回首向来萧瑟处，归去，也无风雨也无晴。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾穗">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2018/08/01/Runner部署/" class="post-title-link" itemprop="url">Gitlab Runner部署</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-08-01 16:43:26" itemprop="dateCreated datePublished" datetime="2018-08-01T16:43:26+08:00">2018-08-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-05-21 22:13:15" itemprop="dateModified" datetime="2019-05-21T22:13:15+08:00">2019-05-21</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">gitlab-runner</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">tools</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">RoleBinding</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">tools</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">gitlab-runner</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    k8s-app:</span> <span class="string">gitlab-runner</span></span><br><span class="line"><span class="attr">roleRef:</span></span><br><span class="line"><span class="attr">  kind:</span> <span class="string">Role</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">gitlab-runner-admin</span></span><br><span class="line"><span class="attr">  apiGroup:</span> <span class="string">rbac.authorization.k8s.io</span></span><br><span class="line"><span class="attr">subjects:</span></span><br><span class="line"><span class="attr">- kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">gitlab-runner</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">tools</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Role</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1beta1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">tools</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">gitlab-runner-admin</span></span><br><span class="line"><span class="attr">rules:</span></span><br><span class="line"><span class="attr">- apiGroups:</span> <span class="string">[""]</span></span><br><span class="line"><span class="attr">  resources:</span> <span class="string">["pods","pods/exec","secrets"]</span></span><br><span class="line"><span class="attr">  verbs:</span> <span class="string">["get",</span> <span class="string">"list"</span><span class="string">,</span> <span class="string">"watch"</span><span class="string">,</span> <span class="string">"create"</span><span class="string">,</span> <span class="string">"update"</span><span class="string">,</span> <span class="string">"patch"</span><span class="string">,</span> <span class="string">"delete"</span><span class="string">]</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">gitlab-runner</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">gitlab-runner</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">tools</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  replicas:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">  revisionHistoryLimit:</span> <span class="number">2</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    matchLabels:</span></span><br><span class="line"><span class="attr">      app:</span> <span class="string">gitlab-runner</span></span><br><span class="line"><span class="attr">  strategy:</span></span><br><span class="line"><span class="attr">    rollingUpdate:</span></span><br><span class="line"><span class="attr">      maxSurge:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">      maxUnavailable:</span> <span class="number">0</span></span><br><span class="line"><span class="attr">    type:</span> <span class="string">RollingUpdate</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line"><span class="attr">      creationTimestamp:</span> <span class="literal">null</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">gitlab-runner</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - args:</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">run</span></span><br><span class="line"><span class="attr">        image:</span> <span class="string">registry.saas.hand-china.com/tools/gitlab-runner:alpine-v10.6.1</span></span><br><span class="line"><span class="attr">        imagePullPolicy:</span> <span class="string">Always</span></span><br><span class="line"><span class="attr">        name:</span> <span class="string">gitlab-runner</span></span><br><span class="line"><span class="attr">        resources:</span></span><br><span class="line"><span class="attr">          limits:</span></span><br><span class="line"><span class="attr">            memory:</span> <span class="number">200</span><span class="string">Mi</span></span><br><span class="line"><span class="attr">          requests:</span></span><br><span class="line"><span class="attr">            memory:</span> <span class="number">200</span><span class="string">Mi</span></span><br><span class="line"><span class="attr">        volumeMounts:</span></span><br><span class="line"><span class="attr">        - mountPath:</span> <span class="string">/etc/gitlab-runner</span></span><br><span class="line"><span class="attr">          name:</span> <span class="string">config</span></span><br><span class="line"><span class="attr">      dnsPolicy:</span> <span class="string">ClusterFirst</span></span><br><span class="line"><span class="attr">      restartPolicy:</span> <span class="string">Always</span></span><br><span class="line"><span class="attr">      schedulerName:</span> <span class="string">default-scheduler</span></span><br><span class="line"><span class="attr">      terminationGracePeriodSeconds:</span> <span class="number">30</span></span><br><span class="line"><span class="attr">      serviceAccount:</span> <span class="string">gitlab-runner</span></span><br><span class="line"><span class="attr">      serviceAccountName:</span> <span class="string">gitlab-runner</span></span><br><span class="line"><span class="attr">      volumes:</span></span><br><span class="line"><span class="attr">      - configMap:</span></span><br><span class="line"><span class="attr">          defaultMode:</span> <span class="number">420</span></span><br><span class="line"><span class="attr">          name:</span> <span class="string">gitlab-runner-config</span></span><br><span class="line"><span class="attr">        name:</span> <span class="string">config</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">gitlab-runner-config</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">tools</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="string">config.toml:</span> <span class="string">|</span></span><br><span class="line"><span class="string">    concurrent = 5</span></span><br><span class="line"><span class="string">    check_interval = 0</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    [[runners]]</span></span><br><span class="line"><span class="string">      name = "runner1"</span></span><br><span class="line"><span class="string">      url = "http://gitlab.alpha.saas.hand-china.com/"</span></span><br><span class="line"><span class="string">      token = "9b204dac0a04a1f619e64fc9893cca"</span></span><br><span class="line"><span class="string">      executor = "kubernetes"</span></span><br><span class="line"><span class="string">      environment = ["CHART_REPOSITORY=http://helm-charts.staging.saas.hand-china.com", "REGISTRY_ADDRESS=registry.saas.hand-china.com", "SONAR_URL=http://sonarqube.staging.saas.hand-china.com/", "DOCKER_REGISTRY=registry.saas.hand-china.com", "NODE_REGISTRY=http://npm.saas.hand-china.com", "CHOERODON_URL=http://api.alpha.saas.hand-china.com"]</span></span><br><span class="line"><span class="string">      [runners.cache]</span></span><br><span class="line"><span class="string">        Type = "s3"</span></span><br><span class="line"><span class="string">        ServerAddress = "devops-deploy-minio.tools.svc:9000"</span></span><br><span class="line"><span class="string">        AccessKey = "admin"</span></span><br><span class="line"><span class="string">        SecretKey = "handhand"</span></span><br><span class="line"><span class="string">        BucketName = "runners"</span></span><br><span class="line"><span class="string">        Insecure = true</span></span><br><span class="line"><span class="string">      [runners.kubernetes]</span></span><br><span class="line"><span class="string">        host = ""</span></span><br><span class="line"><span class="string">        bearer_token_overwrite_allowed = false</span></span><br><span class="line"><span class="string">        image = "registry.saas.hand-china.com/tools/devops-ci:1.0.1"</span></span><br><span class="line"><span class="string">        namespace = "tools"</span></span><br><span class="line"><span class="string">        namespace_overwrite_allowed = ""</span></span><br><span class="line"><span class="string">        privileged = true</span></span><br><span class="line"><span class="string">        cpu_limit = "1"</span></span><br><span class="line"><span class="string">        memory_limit = "2Gi"</span></span><br><span class="line"><span class="string">        service_cpu_limit = "500m"</span></span><br><span class="line"><span class="string">        service_memory_limit = "800Mi"</span></span><br><span class="line"><span class="string">        helper_cpu_limit = "500m"</span></span><br><span class="line"><span class="string">        helper_memory_limit = "200Mi"</span></span><br><span class="line"><span class="string">        cpu_request = "500m"</span></span><br><span class="line"><span class="string">        memory_request = "1Gi"</span></span><br><span class="line"><span class="string">        service_cpu_request = "100m"</span></span><br><span class="line"><span class="string">        service_memory_request = "500Mi"</span></span><br><span class="line"><span class="string">        helper_cpu_request = "100m"</span></span><br><span class="line"><span class="string">        helper_memory_request = "100Mi"</span></span><br><span class="line"><span class="string">        pull_policy = "always"</span></span><br><span class="line"><span class="string">        helper_image = "registry.saas.hand-china.com/tools/gitlab-runner-helper:x86_64-684e71b1"</span></span><br><span class="line"><span class="string">        service_account_overwrite_allowed = ""</span></span><br><span class="line"><span class="string">        pod_annotations_overwrite_allowed = ""</span></span><br><span class="line"><span class="string">        [runners.kubernetes.volumes]</span></span><br><span class="line"><span class="string">          [[runners.kubernetes.volumes.host_path]]</span></span><br><span class="line"><span class="string">            name = "docker"</span></span><br><span class="line"><span class="string">            mount_path = "/var/run/docker.sock"</span></span><br><span class="line"><span class="string">            host_path = "/var/run/docker.sock"</span></span><br><span class="line"><span class="string">          [[runners.kubernetes.volumes.pvc]]</span></span><br><span class="line"><span class="string">            name = "cache"</span></span><br><span class="line"><span class="string">            mount_path = "/cache/"</span></span><br><span class="line"><span class="string">          [[runners.kubernetes.volumes.pvc]]</span></span><br><span class="line"><span class="string">            name = "maven"</span></span><br><span class="line"><span class="string">            mount_path = "/root/.m2"</span></span><br><span class="line"><span class="string">          [[runners.kubernetes.volumes.secret]]</span></span><br><span class="line"><span class="string">            name = "docker-registry-secret"</span></span><br><span class="line"><span class="string">            mount_path = "/root/.docker"</span></span><br><span class="line"><span class="string">            [runners.kubernetes.volumes.secret.items]</span></span><br><span class="line"><span class="string">              "config.json" = "config.json"</span></span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/01/kubeadm升级kubernetes集群/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="setzero">
+      <meta itemprop="description" content="回首向来萧瑟处，归去，也无风雨也无晴。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾穗">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2018/07/01/kubeadm升级kubernetes集群/" class="post-title-link" itemprop="url">kubeadm升级kubernetes集群</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-07-01 16:34:42" itemprop="dateCreated datePublished" datetime="2018-07-01T16:34:42+08:00">2018-07-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-05-21 22:13:15" itemprop="dateModified" datetime="2019-05-21T22:13:15+08:00">2019-05-21</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="备份etcd"><a href="#备份etcd" class="headerlink" title="备份etcd"></a>备份etcd</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 备份命令</span><br><span class="line">mkdir -p /etc/kubernetes/etcd_back</span><br><span class="line">ETCDCTL_API=3 /usr/local/bin/etcdctl --cacert /etc/ssl/etcd/ssl/ca.pem --cert /etc/ssl/etcd/ssl/client.pem --key /etc/ssl/etcd/ssl/client-key.pem snapshot save $(date &quot;+/etc/kubernetes/etcd_back/etcd-%s.db&quot;)</span><br><span class="line"># 确认备份</span><br><span class="line">ETCDCTL_API=3 /usr/local/bin/etcdctl --write-out=table snapshot status backup.db</span><br></pre></td></tr></table></figure>
+
+<h3 id="备份kubernetes配置文件"><a href="#备份kubernetes配置文件" class="headerlink" title="备份kubernetes配置文件"></a>备份kubernetes配置文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">back_dir=$(date &quot;+kubernetes-%s&quot;)</span><br><span class="line">mkdir -p /etc/kubernetes_back/$back_dir</span><br><span class="line">cp -r /etc/kubernetes/* /etc/kubernetes_back/$back_dir</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加rpm源"><a href="#添加rpm源" class="headerlink" title="添加rpm源"></a>添加rpm源</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo</span><br><span class="line">[kubernetes]</span><br><span class="line">name=Kubernetes</span><br><span class="line">baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64</span><br><span class="line">enabled=0</span><br><span class="line">gpgcheck=0</span><br><span class="line">repo_gpgcheck=0</span><br><span class="line">gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="更新安装包"><a href="#更新安装包" class="headerlink" title="更新安装包"></a>更新安装包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum --enablerepo=kubernetes install -y \</span><br><span class="line">    kubeadm-1.9.9-0.x86_64 \</span><br><span class="line">    kubectl-1.9.9-0.x86_64 \</span><br><span class="line">    kubelet-1.9.9-0.x86_64</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改-etc-kubernetes-kubeadm-config-yaml文件"><a href="#修改-etc-kubernetes-kubeadm-config-yaml文件" class="headerlink" title="修改/etc/kubernetes/kubeadm-config.yaml文件"></a>修改/etc/kubernetes/kubeadm-config.yaml文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubernetesVersion: v1.8.5 -&gt; kubernetesVersion: v1.9.9</span><br><span class="line">GenericAdmissionWebhook -&gt; ValidatingAdmissionWebhook</span><br></pre></td></tr></table></figure>
+
+<h3 id="重启kubelet"><a href="#重启kubelet" class="headerlink" title="重启kubelet"></a>重启kubelet</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart kubelet</span><br></pre></td></tr></table></figure>
+
+<h3 id="进行升级"><a href="#进行升级" class="headerlink" title="进行升级"></a>进行升级</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm upgrade apply v1.9.9 --config=/etc/kubernetes/kubeadm-config.yaml -f</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/18/阿里云使用弹性公网IP-VPC集群可以正常访问公网/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="setzero">
+      <meta itemprop="description" content="回首向来萧瑟处，归去，也无风雨也无晴。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾穗">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2018/02/18/阿里云使用弹性公网IP-VPC集群可以正常访问公网/" class="post-title-link" itemprop="url">阿里云使用弹性公网IP,VPC集群可以正常访问公网</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-02-18 00:48:47" itemprop="dateCreated datePublished" datetime="2018-02-18T00:48:47+08:00">2018-02-18</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-05-21 22:13:15" itemprop="dateModified" datetime="2019-05-21T22:13:15+08:00">2019-05-21</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>在使用容器服务的过程中。出于业务的需要，用户需要创建VPC集群，但是又不希望每台ECS都绑定公网EIP，一方面是出于业务私密性的保护，另外一方面是出于节约成本的考虑。</p>
+</blockquote>
+<ul>
+<li>基于以上场景，我们可以让集群内的机器，通过一台有EIP的机器来上网。在这个过程中主要使用到了SNAT相关的知识。先找一台同区域内的VPC机器，为该机器配置EIP</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># iptables添加SNAT转换 其中172.16.0.0/12是内网网段, --to-source是绑定了EIP的这台机器的内网IP</span><br><span class="line">sysctl net.ipv4.ip_forward=1 \</span><br><span class="line">&amp;&amp; echo &quot;net.ipv4.ip_forward=1&quot; &gt;&gt; /etc/sysctl.conf \</span><br><span class="line">&amp;&amp; sysctl -p \</span><br><span class="line">&amp;&amp; iptables -t nat -I POSTROUTING -s 172.16.0.0/12 -j SNAT --to-source $(ifconfig eth0 | grep inet | awk &apos;&#123;print $2&#125;&apos;) \</span><br><span class="line">&amp;&amp; iptables-save</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>去VPC控制台，添加VPC路由器，其中的下一跳ECS是绑定了公网EIP的那台ECS</li>
+</ul>
+<p><img src="http://img1.tbcdn.cn/L1/461/1/6001229eba19c2809b736547cabe45bc0c9fbf9f.png" alt></p>
+<p><a href="https://yq.aliyun.com/articles/3031" target="_blank" rel="noopener">参考地址</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/30/去除Ansible模板渲染字符串前的不需要字符/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="setzero">
+      <meta itemprop="description" content="回首向来萧瑟处，归去，也无风雨也无晴。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾穗">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2018/01/30/去除Ansible模板渲染字符串前的不需要字符/" class="post-title-link" itemprop="url">去除Ansible模板渲染字符串前的不需要字符</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-01-30 12:35:51" itemprop="dateCreated datePublished" datetime="2018-01-30T12:35:51+08:00">2018-01-30</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-05-21 22:35:22" itemprop="dateModified" datetime="2019-05-21T22:35:22+08:00">2019-05-21</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>定义的vars属性及值</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">resources:</span></span><br><span class="line">  <span class="comment"># rabbitmq链接地址</span></span><br><span class="line"><span class="attr">  rabbitmq:</span></span><br><span class="line"><span class="attr">    type:</span> <span class="string">rabbitmq</span></span><br><span class="line"><span class="attr">    host:</span> <span class="string">rabbitmq.devops.svc</span></span><br><span class="line"><span class="attr">    port:</span> <span class="number">5672</span></span><br><span class="line">  <span class="comment"># 用户服务所需redis</span></span><br><span class="line"><span class="attr">  redis:</span></span><br><span class="line"><span class="attr">    type:</span> <span class="string">redis</span></span><br><span class="line"><span class="attr">    host:</span> <span class="string">redis.devops.svc</span></span><br><span class="line"><span class="attr">    db:</span> <span class="number">0</span></span><br><span class="line"><span class="attr">    port:</span> <span class="number">6379</span></span><br></pre></td></tr></table></figure>
+
+
+- 使用 <code>{{ resources }}</code> 得到如下结果：
+
+
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    u"redis": &#123;</span><br><span class="line">        u"type": u"redis",</span><br><span class="line">        u"host": u"redis.devops.svc",</span><br><span class="line">        u"db": 0,</span><br><span class="line">        u"port": 6379</span><br><span class="line">    &#125;,</span><br><span class="line">    u"rabbitmq": &#123;</span><br><span class="line">        u"host": u"rabbitmq.devops.svc",</span><br><span class="line">        u"type": u"rabbitmq",</span><br><span class="line">        u"port": 5672</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+- 使用 <code>{{ resources | to_json }}</code> 得到正常结果：
+
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"redis"</span>: &#123;</span><br><span class="line">        <span class="attr">"type"</span>: <span class="string">"redis"</span>,</span><br><span class="line">        <span class="attr">"host"</span>: <span class="string">"redis.devops.svc"</span>,</span><br><span class="line">        <span class="attr">"db"</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="attr">"port"</span>: <span class="number">6379</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"rabbitmq"</span>: &#123;</span><br><span class="line">        <span class="attr">"host"</span>: <span class="string">"rabbitmq.devops.svc"</span>,</span><br><span class="line">        <span class="attr">"type"</span>: <span class="string">"rabbitmq"</span>,</span><br><span class="line">        <span class="attr">"port"</span>: <span class="number">5672</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://stackoverflow.com/questions/41521138/ansible-template-adds-u-to-array-in-template" target="_blank" rel="noopener">查考链接</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/29/通过Shell脚本读取properties文件中的参数/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="setzero">
+      <meta itemprop="description" content="回首向来萧瑟处，归去，也无风雨也无晴。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾穗">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2018/01/29/通过Shell脚本读取properties文件中的参数/" class="post-title-link" itemprop="url">通过Shell脚本读取properties文件中的参数</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-01-29 12:45:26" itemprop="dateCreated datePublished" datetime="2018-01-29T12:45:26+08:00">2018-01-29</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-05-21 22:13:15" itemprop="dateModified" datetime="2019-05-21T22:13:15+08:00">2019-05-21</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="问题具体描述"><a href="#问题具体描述" class="headerlink" title="问题具体描述"></a>问题具体描述</h3><ul>
+<li>目标：读取*.properties文件，获取里面的键值对。</li>
+<li>遇到的问题：通过shell脚本读取*.properties文件时，由于其key-value格式分行存储,在linux中获取到的value值最后有一个\r参数(可以通过sh -x  app.sh查看到),导致得到的值跟预期的不一致。</li>
+</ul>
+<h3 id="简单键值对"><a href="#简单键值对" class="headerlink" title="简单键值对"></a>简单键值对</h3><p>定义键值对pom.properties如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">version=1.0</span><br><span class="line">groupId=project.parent</span><br><span class="line">artifactId=com.lxk.cms.admin.service</span><br></pre></td></tr></table></figure>
+
+<h4 id="原始版本"><a href="#原始版本" class="headerlink" title="原始版本"></a>原始版本</h4><ul>
+<li>这样写在控制台打印出来看着是很正常的，因为<code>\r</code>已被echo所处理，所以看不出什么，但输出到文本中每个值后边都会跟上<code>&amp;#13;</code>这样一个乱码。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">. pom.properties</span><br><span class="line">ver=$version</span><br><span class="line">art=$artifactId</span><br><span class="line">echo $ver</span><br><span class="line">echo $art</span><br></pre></td></tr></table></figure>
+
+<h4 id="优化版本"><a href="#优化版本" class="headerlink" title="优化版本"></a>优化版本</h4><ul>
+<li>去除后边的<code>\r</code>后一切正常。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">. pom.properties</span><br><span class="line">ver=$(echo $version | sed &apos;s/\r//&apos;)</span><br><span class="line">art=$(echo $artifactId | sed &apos;s/\r//&apos;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂键值对"><a href="#复杂键值对" class="headerlink" title="复杂键值对"></a>复杂键值对</h3><p>很多时候我们定义key的时候会想下面一样进行<code>分组</code>，此时使用上面的所使用的<code>.</code>进行加载键值对shell就会报错，那么我们可以使用<code>grep</code>命令进行解决：</p>
+<p>定义键值对pom.properties如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redis.ip=127.0.0.1</span><br><span class="line">redis.port=6379</span><br><span class="line">redis.db=8</span><br></pre></td></tr></table></figure>
+
+<p>写成一个函数，将所需的key传入即可，最后也须将<code>\r</code>去除</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">prop()&#123;</span><br><span class="line">    grep &quot;$&#123;1&#125;&quot; pom.properties | cut -d&apos;=&apos; -f2 | sed &apos;s/\r//&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://www.cnblogs.com/ljhoracle/p/6277064.html" target="_blank" rel="noopener">参考链接</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/21/基于Kubernetes搭建Openvpn-Server/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="setzero">
+      <meta itemprop="description" content="回首向来萧瑟处，归去，也无风雨也无晴。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾穗">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2018/01/21/基于Kubernetes搭建Openvpn-Server/" class="post-title-link" itemprop="url">基于Kubernetes搭建Openvpn Server</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-01-21 10:10:06" itemprop="dateCreated datePublished" datetime="2018-01-21T10:10:06+08:00">2018-01-21</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-05-21 22:39:01" itemprop="dateModified" datetime="2019-05-21T22:39:01+08:00">2019-05-21</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="部署文件"><a href="#部署文件" class="headerlink" title="部署文件"></a>部署文件</h3><p>主要包括PersistentVolume、PersistentVolumeClaim、Deployment、Service,参考如下:</p>
+<h4 id="PersistentVolume"><a href="#PersistentVolume" class="headerlink" title="PersistentVolume"></a>PersistentVolume</h4><p>PV一般情况需要绑定一个nfs服务来持久化数据到磁盘,请替换下边配置中的地址和路径。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolume</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">openvpn</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">openvpn</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  capacity:</span></span><br><span class="line"><span class="attr">    storage:</span> <span class="number">1</span><span class="string">Gi</span></span><br><span class="line"><span class="attr">  accessModes:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">ReadWriteMany</span></span><br><span class="line"><span class="attr">  nfs:</span></span><br><span class="line"><span class="attr">    server:</span> <span class="string">YOUR_NFS_SERVER_ADDRESS</span></span><br><span class="line"><span class="attr">    path:</span> <span class="string">"YOUR_NFS_PATH"</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="PersistentVolumeClaim"><a href="#PersistentVolumeClaim" class="headerlink" title="PersistentVolumeClaim"></a>PersistentVolumeClaim</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolumeClaim</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">openvpn</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">openvpn</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  accessModes:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">ReadWriteMany</span></span><br><span class="line"><span class="attr">  resources:</span></span><br><span class="line"><span class="attr">    requests:</span></span><br><span class="line"><span class="attr">      storage:</span> <span class="number">1</span><span class="string">Gi</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    matchLabels:</span></span><br><span class="line"><span class="attr">      app:</span> <span class="string">openvpn</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h4><p>Service需要使用externalIP将端口绑定到某个节点的ip上,请将下边<code>&lt;SERVICE_EXTERNAL_IP&gt;</code>替换为某个节点的ip:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">openvpn</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">openvpn</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  ports:</span></span><br><span class="line"><span class="attr">    - protocol:</span> <span class="string">TCP</span></span><br><span class="line"><span class="attr">      port:</span> <span class="number">1194</span></span><br><span class="line"><span class="attr">      targetPort:</span> <span class="number">1194</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">openvpn</span></span><br><span class="line"><span class="attr">  type:</span> <span class="string">ClusterIP</span></span><br><span class="line"><span class="attr">  externalIPs:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">&lt;SERVICE_EXTERNAL_IP&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h4><ul>
+<li>关于openvpn详细参数配置如下，请跟据实际情况替换（这里默认使用的公司的ldap进行授权认证）:<ul>
+<li><code>&lt;SERVICE_EXTERNAL_IP&gt;</code>: 与Service中设置的externalIP相同。</li>
+<li><code>&lt;YOUR_NODE_DNS_IP&gt;</code>: 为你机器的DNS服务器地址，可以通过<code>cat /etc/resolv.conf</code>查看。</li>
+<li><code>&lt;YOUR_CLUSTER_SERVICE_CIDR&gt;</code>: 为kubernetes集群的service的ip段和子网掩码。假如,我的Service的ip段为10.233.0.0/18,那么这里的值就填写10.233.0.0 255.255.192.0。关于子网掩码计算可以百度。</li>
+<li><code>&lt;YOUR_CLUSTER_DNS_SERVER&gt;</code>: 为kubernetes集群的kube-dns的service的CLuster IP。<code>kubectl get svc -n kube-system | grep kube-dns</code></li>
+<li><code>&lt;YOUR_CLUSTER_POD_SUBNET&gt;</code>: 为kubernetes集群的pod的网络地址。假如,我的pod的ip段为10.233.64.0/18,那么这里的值就是10.233.64.0</li>
+<li><code>&lt;YOUR_CLUSTER_POD_MASK&gt;</code>: 为kubernetes集群的pod网段的掩码地址。假如,我的pod的ip段为10.233.64.0/18,那么掩码地址为:255.255.192.0。关于子网掩码计算可以百度。</li>
+<li><code>&lt;YOUR_CLUSTER_DOMAIN&gt;</code>: 集群的域,如果在安装集群的时候没有特别配置，默认是cluster.local</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">openvpn</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">openvpn</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  replicas:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    matchLabels:</span></span><br><span class="line"><span class="attr">      name:</span> <span class="string">openvpn</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        name:</span> <span class="string">openvpn</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">openvpn</span></span><br><span class="line"><span class="attr">          image:</span> <span class="string">'registry.saas.hand-china.com/tools/rancher-openvpn:latest'</span></span><br><span class="line"><span class="attr">          ports:</span></span><br><span class="line"><span class="attr">          - containerPort:</span> <span class="number">1194</span></span><br><span class="line"><span class="attr">            protocol:</span> <span class="string">TCP</span></span><br><span class="line"><span class="attr">          env:</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">REMOTE_IP</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">&lt;SERVICE_EXTERNAL_IP&gt;</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">REMOTE_PORT</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">'1194'</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">CERT_COUNTRY</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">FR</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">CERT_PROVINCE</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">PACA</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">CERT_CITY</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">Marseille</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">CERT_ORG</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">MDNS</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">CERT_EMAIL</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">none@example.com</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">CERT_OU</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">IT</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">VPNPOOL_NETWORK</span></span><br><span class="line"><span class="attr">              value:</span> <span class="number">10.8</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">VPNPOOL_CIDR</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">'16'</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">OPENVPN_EXTRACONF</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">'push "dhcp-option DNS &lt;YOUR_NODE_DNS_IP&gt;"\npush "route &lt;YOUR_CLUSTER_SERVICE_CIDR&gt;"'</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">AUTH_METHOD</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">ldap</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">AUTH_LDAP_URL</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">'ldap://ac.hand-china.com'</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">AUTH_LDAP_SEARCH</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">(employeeNumber=$username)</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">AUTH_LDAP_BASEDN</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">'ou=employee,dc=hand-china,dc=com'</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">PUSHDNS</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">&lt;YOUR_CLUSTER_DNS_SERVER&gt;</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">PUSHSEARCH</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">&lt;YOUR_CLUSTER_DOMAIN&gt;</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">ROUTE_NETWORK</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">&lt;YOUR_CLUSTER_POD_SUBNET&gt;</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">ROUTE_NETMASK</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">&lt;YOUR_CLUSTER_POD_MASK&gt;</span></span><br><span class="line"><span class="attr">          resources:</span></span><br><span class="line"><span class="attr">            limits:</span></span><br><span class="line"><span class="attr">              memory:</span> <span class="number">100</span><span class="string">Mi</span></span><br><span class="line"><span class="attr">            requests:</span></span><br><span class="line"><span class="attr">              memory:</span> <span class="number">100</span><span class="string">Mi</span></span><br><span class="line"><span class="attr">          volumeMounts:</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">vpn-openshift</span></span><br><span class="line"><span class="attr">              mountPath:</span> <span class="string">/etc/openvpn</span></span><br><span class="line"><span class="attr">          terminationMessagePath:</span> <span class="string">/dev/termination-log</span></span><br><span class="line"><span class="attr">          imagePullPolicy:</span> <span class="string">Always</span></span><br><span class="line"><span class="attr">          securityContext:</span></span><br><span class="line"><span class="attr">            privileged:</span> <span class="literal">true</span>      </span><br><span class="line"><span class="attr">      volumes:</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">vpn-openshift</span></span><br><span class="line"><span class="attr">        persistentVolumeClaim:</span></span><br><span class="line"><span class="attr">          claimName:</span> <span class="string">openvpn</span></span><br><span class="line"><span class="attr">      restartPolicy:</span> <span class="string">Always</span></span><br><span class="line"><span class="attr">      terminationGracePeriodSeconds:</span> <span class="number">30</span></span><br><span class="line"><span class="attr">      dnsPolicy:</span> <span class="string">ClusterFirst</span></span><br><span class="line"><span class="attr">      securityContext:</span> <span class="string">&#123;&#125;</span></span><br><span class="line"><span class="attr">  strategy:</span></span><br><span class="line"><span class="attr">    type:</span> <span class="string">RollingUpdate</span></span><br><span class="line"><span class="attr">    rollingUpdate:</span></span><br><span class="line"><span class="attr">      maxUnavailable:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">      maxSurge:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">  revisionHistoryLimit:</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h4><ul>
+<li>部署完成之后,你可以通过dashboard界面或者kubectl命令查看到该openvpn对应的pod的日志。在日志中会输出vpn的连接信息和证书。</li>
+<li>将证书内容复制下来，保存到一个文件中，并且以.ovpn命名后缀。</li>
+<li>接下来就可以使用客户端进行连接了。windows可以下载官方的openvpn客户端，mac用户使用shimo。</li>
+<li>更多关于vpn的环境变量配置请参考<a href="https://github.com/mdnsfr/docker-rancher-openvpn" target="_blank" rel="noopener">GITHUB</a></li>
+</ul>
+<h4 id="使用openvpn访问集群"><a href="#使用openvpn访问集群" class="headerlink" title="使用openvpn访问集群"></a>使用openvpn访问集群</h4><ul>
+<li>使用vpn客户端连接上集群openvpn后，我们可以在本地直接访问集群里的POD IP和SERVICE。</li>
+<li>如果想要用service的dns名称进行访问，需要将dns的名称写全。规则是:<service_name>.<namespace>.svc.<cluster_domain>。</cluster_domain></namespace></service_name></li>
+<li><service_name>: 服务的名称</service_name></li>
+<li><namespace>: 命名空间名称</namespace></li>
+<li><cluster_domain>: 集群的域,默认是cluster.local</cluster_domain></li>
+<li>假如，我在test的命名空间下部署可一个nginx应用,并且service的名称叫做nginx1，那么我本地机器可以直接访问<code>http://nginx1.test.svc.cluster.local</code>来访问nginx应用。</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/12/Docker配置修改/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="setzero">
+      <meta itemprop="description" content="回首向来萧瑟处，归去，也无风雨也无晴。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾穗">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2018/01/12/Docker配置修改/" class="post-title-link" itemprop="url">Docker配置修改</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-01-12 18:04:33" itemprop="dateCreated datePublished" datetime="2018-01-12T18:04:33+08:00">2018-01-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-05-21 22:13:15" itemprop="dateModified" datetime="2019-05-21T22:13:15+08:00">2019-05-21</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>有时我们会对Docker的一些启动参数进行配置，比如镜像存储在上面位置，日志的大小等。那么我们可以编辑<code>/etc/docker/daemon.json</code>文件进行设置。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    // 设置为systemd，与K8S默认一致</span><br><span class="line">    "exec-opts": ["native.cgroupdriver=systemd"],</span><br><span class="line">    // 忽略https</span><br><span class="line">    "insecure-registries": ["register.local.com"],</span><br><span class="line">    // 若/var/lib的存储空间很小则可以添加此参数</span><br><span class="line">    "data-root": "/root",</span><br><span class="line">    "storage-driver": "overlay",</span><br><span class="line">    "log-driver": "json-file",</span><br><span class="line">    "log-opts": &#123;</span><br><span class="line">      "max-size": "10m"</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意修改之后需要重启docker才能生效。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload &amp;&amp; systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://docs.docker.com/engine/reference/commandline/dockerd/" target="_blank" rel="noopener">参考链接</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/10/Kubernetes-针对资源紧缺处理方式的配置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="setzero">
+      <meta itemprop="description" content="回首向来萧瑟处，归去，也无风雨也无晴。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾穗">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2018/01/10/Kubernetes-针对资源紧缺处理方式的配置/" class="post-title-link" itemprop="url">Kubernetes 针对资源紧缺处理方式的配置</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-01-10 22:08:58" itemprop="dateCreated datePublished" datetime="2018-01-10T22:08:58+08:00">2018-01-10</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-05-21 22:13:15" itemprop="dateModified" datetime="2019-05-21T22:13:15+08:00">2019-05-21</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li>使用环境变量文件注入<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/kubernetes/kubelet.env</span><br><span class="line"></span><br><span class="line">--eviction-hard=memory.available&lt;1Gi,nodefs.available&lt;10Gi,imagefs.available&lt;10Gi \</span><br><span class="line">--eviction-minimum-reclaim=memory.available=512Mi,nodefs.available=5Gi,imagefs.available=5Gi \</span><br><span class="line">--eviction-pressure-transition-period=5m0s \</span><br><span class="line">--system-reserved=cpu=100m,memory=1Gi \</span><br><span class="line"></span><br><span class="line">systemctl stop kubelet.service &amp;&amp; systemctl daemon-reload &amp;&amp; systemctl start kubelet.service</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>参考链接：<a href="https://github.com/kubernetes-incubator/kubespray" target="_blank" rel="noopener">https://github.com/kubernetes-incubator/kubespray</a></p>
+<ul>
+<li>重写配置文件进行配置<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/systemd/system/kubelet.service.d/20-kubelet-override.conf</span><br><span class="line"></span><br><span class="line">--eviction-hard=memory.available&lt;512Mi,nodefs.available&lt;10Gi,imagefs.available&lt;10Gi \</span><br><span class="line">--eviction-minimum-reclaim=memory.available=512Mi,nodefs.available=5Gi,imagefs.available=5Gi \</span><br><span class="line">--eviction-pressure-transition-period=5m0s \</span><br><span class="line">--system-reserved=cpu=100m,memory=1Gi \</span><br><span class="line"></span><br><span class="line">systemctl daemon-reload &amp;&amp; systemctl restart kubelet.service</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>参考链接：<a href="https://www.kubernetes.org.cn/1150.html" target="_blank" rel="noopener">https://www.kubernetes.org.cn/1150.html</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/sonatype-Nexus3-install-on-Kubernetes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="setzero">
+      <meta itemprop="description" content="回首向来萧瑟处，归去，也无风雨也无晴。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾穗">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2018/01/02/sonatype-Nexus3-install-on-Kubernetes/" class="post-title-link" itemprop="url">sonatype Nexus3 install on Kubernetes</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-01-02 23:33:22" itemprop="dateCreated datePublished" datetime="2018-01-02T23:33:22+08:00">2018-01-02</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-05-21 22:13:15" itemprop="dateModified" datetime="2019-05-21T22:13:15+08:00">2019-05-21</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="一、Nexus安装"><a href="#一、Nexus安装" class="headerlink" title="一、Nexus安装"></a>一、Nexus安装</h3><h4 id="1、安装方式一"><a href="#1、安装方式一" class="headerlink" title="1、安装方式一"></a>1、安装方式一</h4><ul>
+<li><p>使用<code>nexus-builder.yaml</code>(见本文末尾)文件进行安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create -f ./nexus-builder.yaml</span><br><span class="line">namespace &quot;nexus&quot; created</span><br><span class="line">deployment &quot;nexus3&quot; created</span><br><span class="line">service &quot;nexus3&quot; created</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装完成后，查找对应端口进行访问：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl describe svc -n nexus nexus3 | grep &apos;NodePort:&apos;</span><br><span class="line">NodePort:               &lt;unset&gt; 32139/TCP</span><br><span class="line">$ hostname -i</span><br><span class="line">192.168.56.11</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>恭喜你，已完成Nexus3的安装，接下来你就可以进行访问了<code>192.168.56.11:32139</code>。</p>
+</li>
+</ul>
+<p><strong>Note:如果页面无法访问，请等待几分钟后再刷新页面。</strong></p>
+<h4 id="2、安装方式二"><a href="#2、安装方式二" class="headerlink" title="2、安装方式二"></a>2、安装方式二</h4><ul>
+<li>执行脚本<code>nexus-builder.sh</code>(见本文末尾)进行安装：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create -f ./run.sh</span><br><span class="line">namespace &quot;nexus&quot; created</span><br><span class="line">deployment &quot;nexus3&quot; created</span><br><span class="line">service &quot;nexus3&quot; created</span><br><span class="line">Now Nexus running on k8s-worker2 : 192.168.56.11:32139</span><br><span class="line">Note:If the page can&apos;t be accessed,please wait a few minutes and refresh the page.</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>参考资料：<a href="https://hub.docker.com/u/sonatype/" target="_blank" rel="noopener">sonatype/nexus3 - Docker Hub</a></p>
+<h3 id="二、用户操作界面"><a href="#二、用户操作界面" class="headerlink" title="二、用户操作界面"></a>二、用户操作界面</h3><h4 id="1、用户登录"><a href="#1、用户登录" class="headerlink" title="1、用户登录"></a>1、用户登录</h4><ul>
+<li>根据上面的地址打开用户界面。点击右上角<code>Sign in</code>登陆，默认账号<code>admin</code>，密码<code>admin123</code>。
+<img src="http://upload-images.jianshu.io/upload_images/3986094-3522e9aba83f6899.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></li>
+</ul>
+<h4 id="2、修改用户密码"><a href="#2、修改用户密码" class="headerlink" title="2、修改用户密码"></a>2、修改用户密码</h4><ul>
+<li><p>为了系统的安全性考虑，请及时修改密码，下面我们以默认账号<code>admin</code>为例进行修改，在配置页面，选择<code>Security - User</code>，点击用户列表<code>admin</code>。
+<img src="http://upload-images.jianshu.io/upload_images/3986094-9b3fcf6399429a78.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+</li>
+<li><p>进入后选择<code>More - Change password</code>进行密码修改。<br><img src="http://upload-images.jianshu.io/upload_images/3986094-2c906972d4cbb4fb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+</li>
+</ul>
+<h4 id="3、创建maven仓库"><a href="#3、创建maven仓库" class="headerlink" title="3、创建maven仓库"></a>3、创建maven仓库</h4><ul>
+<li><p>在配置界面，选择<code>Repository - repositories</code>，图中红色选线框着的是默认仓库。点击<code>Create repository</code>。
+<img src="http://upload-images.jianshu.io/upload_images/1359048-1e77ddf98ab4a775.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+</li>
+<li><p>我们的目的仅仅管理自己开发的组件，选择<code>maven2(hosted)</code>即可。<br><img src="http://upload-images.jianshu.io/upload_images/1359048-48e3b95f39f3bacd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+</li>
+<li><p>填写仓库配置，<code>Deployment policy</code>选择<code>Allow redeploy</code>。
+<img src="http://upload-images.jianshu.io/upload_images/3986094-9c3b1ffb7c01684b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+</li>
+</ul>
+<blockquote>
+<p>_version policy_，可以选Release或Snapshot，如果仓库开放给所有人，那选Release比较好，如果公司内部或自己用，其中一个都可以。</p>
+</blockquote>
+<ul>
+<li>仓库<code>Hand-repository</code>创建完毕<br><img src="http://upload-images.jianshu.io/upload_images/3986094-917af9a1d4fc9b8a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></li>
+</ul>
+<h4 id="4、创建角色"><a href="#4、创建角色" class="headerlink" title="4、创建角色"></a>4、创建角色</h4><ul>
+<li>在配置页面，选择<code>Security - Roles</code>，点击<code>Nexus role</code>：
+<img src="http://upload-images.jianshu.io/upload_images/3986094-dccdfcb4d09a88a8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></li>
+<li>填写角色配置，根据所需的权限进行添加权限，然后点击<code>Create role</code>：
+<img src="http://upload-images.jianshu.io/upload_images/3986094-9b1922ed552ea212.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br><img src="http://upload-images.jianshu.io/upload_images/3986094-e811225cacbbcf36.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></li>
+</ul>
+<h4 id="5、创建用户"><a href="#5、创建用户" class="headerlink" title="5、创建用户"></a>5、创建用户</h4><ul>
+<li><p>在配置页面，选择<code>Security - User</code>，点击<code>Create user</code>：
+<img src="http://upload-images.jianshu.io/upload_images/1359048-ac9e166e7e5218ef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+</li>
+<li><p>填写用户信息，再点击最底下的<code>Create user</code>即可创建用户，注意如果启用此帐号，<code>Status</code>选择<code>Active</code>。
+<img src="http://upload-images.jianshu.io/upload_images/3986094-aeb32f8d272daba1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br><img src="http://upload-images.jianshu.io/upload_images/3986094-95e9c11712ba4c6b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+</li>
+<li><p>创建<strong>HandUser</strong>用户后，可以<code>Sign out</code>，用<strong>HandUser</strong>账号登陆了。</p>
+</li>
+</ul>
+<h3 id="三、工作空间设置"><a href="#三、工作空间设置" class="headerlink" title="三、工作空间设置"></a>三、工作空间设置</h3><h4 id="1、给单一项目设置远程仓库"><a href="#1、给单一项目设置远程仓库" class="headerlink" title="1、给单一项目设置远程仓库"></a>1、给单一项目设置远程仓库</h4><ul>
+<li><p>在Maven project中的<code>pom.xml</code>文件添加以下信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;repositories&gt;</span><br><span class="line">	&lt;repository&gt;</span><br><span class="line">		&lt;id&gt;nexus&lt;/id&gt;</span><br><span class="line">		&lt;name&gt;Nexus3 Repository&lt;/name&gt;</span><br><span class="line">		&lt;!-- 此为仓库地址，应用 group 类型可以相当于同时添加多个仓库地址 --&gt;</span><br><span class="line">		&lt;url&gt;http://192.168.56.11:32139/repository/maven-public/&lt;/url&gt;</span><br><span class="line">	&lt;/repository&gt;</span><br><span class="line">&lt;/repositories&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>代码中<code>url</code>标签的路径在<code>Repositories</code>中选择需要的仓库，点击<code>URL</code>字段下的<code>copy</code>进行复制。<br><img src="http://upload-images.jianshu.io/upload_images/3986094-9ec1b2e96a7434bd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+</li>
+</ul>
+<h4 id="2、设置所有项目远程仓库"><a href="#2、设置所有项目远程仓库" class="headerlink" title="2、设置所有项目远程仓库"></a>2、设置所有项目远程仓库</h4><p> <strong>全局配置文件在Maven安装目录<code>conf</code>文件夹中<code>settings.xml</code>，当前用户配置文件在本地仓库中的<code>settings.xml</code>。</strong></p>
+<p> <strong>若更改当前用户配置信息无效，则修改全局配置信息。</strong></p>
+<p>#####（1）、在本地仓库文件夹下，给<code>settings.xml</code>文件添加以下信息</p>
+<ul>
+<li><strong>此种方法如果远程仓库关闭或意外退出，在maven构建时会到中央仓库去查找jar包</strong> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;profiles&gt;</span><br><span class="line">    &lt;profile&gt;</span><br><span class="line">      &lt;id&gt;NexusRepo&lt;/id&gt;</span><br><span class="line">      &lt;repositories&gt;</span><br><span class="line">        &lt;repository&gt;</span><br><span class="line">          &lt;id&gt;nexus&lt;/id&gt;</span><br><span class="line">          &lt;name&gt;Nexus3 Repository&lt;/name&gt;</span><br><span class="line">          &lt;url&gt;http://192.168.56.11:32139/repository/maven-public/&lt;/url&gt;</span><br><span class="line">          &lt;releases&gt;</span><br><span class="line">            &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">          &lt;/releases&gt;</span><br><span class="line">          &lt;!-- snapshots默认是关闭的，需要手动开启 --&gt;</span><br><span class="line">          &lt;snapshots&gt;</span><br><span class="line">            &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">          &lt;/snapshots&gt;</span><br><span class="line">        &lt;/repository&gt;</span><br><span class="line">      &lt;/repositories&gt;</span><br><span class="line">    &lt;/profile&gt;    </span><br><span class="line">&lt;/profiles&gt;</span><br><span class="line">&lt;!-- 只有激活后才生效，此代码为激活代码  --&gt;</span><br><span class="line">&lt;activeProfiles&gt;</span><br><span class="line">      &lt;activeProfile&gt;NexusRepo&lt;/activeProfile&gt;</span><br><span class="line">&lt;/activeProfiles&gt;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>#####（2）、在本地仓库文件夹下，给<code>settings.xml</code>文件添加以下信息</p>
+<ul>
+<li><strong>添加此配置信息后，上面（1）中的配置将失效</strong> </li>
+<li><strong>Maven构建时可能会出现报错信息，尝试更新索引文件</strong> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 工厂的镜像，只要mirrorOf中的工厂要被访问，都会自动来找镜像，如果无法访问就不会再去中央工厂，推荐这个配置 --&gt;</span><br><span class="line">&lt;mirrors&gt;</span><br><span class="line">  &lt;mirror&gt;</span><br><span class="line">    &lt;id&gt;nexusMirror&lt;/id&gt;</span><br><span class="line">    &lt;!-- *号代表所有仓库，此处也可以单独设置，以逗号隔开 --&gt;</span><br><span class="line">    &lt;mirrorOf&gt;*&lt;/mirrorOf&gt;</span><br><span class="line">    &lt;name&gt;Human Readable Name for this Mirror.&lt;/name&gt;</span><br><span class="line">    &lt;url&gt;http://192.168.56.11:32139/repository/maven-public/&lt;/url&gt;</span><br><span class="line">  &lt;/mirror&gt;</span><br><span class="line">&lt;/mirrors&gt;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="3、Maven默认是无法下载中央仓库snapshots版本jar包的，通过以下设置即可下载"><a href="#3、Maven默认是无法下载中央仓库snapshots版本jar包的，通过以下设置即可下载" class="headerlink" title="3、Maven默认是无法下载中央仓库snapshots版本jar包的，通过以下设置即可下载"></a>3、Maven默认是无法下载中央仓库snapshots版本jar包的，通过以下设置即可下载</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;profiles&gt;</span><br><span class="line">    &lt;profile&gt;</span><br><span class="line">      &lt;id&gt;NexusRepo&lt;/id&gt;</span><br><span class="line">      &lt;repositories&gt;</span><br><span class="line">        &lt;repository&gt;</span><br><span class="line">          &lt;id&gt;central&lt;/id&gt;</span><br><span class="line">          &lt;name&gt;Central Repository&lt;/name&gt;</span><br><span class="line">          &lt;url&gt;https://repo.maven.apache.org/maven2&lt;/url&gt;</span><br><span class="line">          &lt;layout&gt;default&lt;/layout&gt;</span><br><span class="line">          &lt;snapshots&gt;</span><br><span class="line">            &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">          &lt;/snapshots&gt;</span><br><span class="line">        &lt;/repository&gt;</span><br><span class="line">      &lt;/repositories&gt;</span><br><span class="line">    &lt;/profile&gt;    </span><br><span class="line">&lt;/profiles&gt;</span><br><span class="line">&lt;!-- 只有激活后才生效，此代码为激活代码  --&gt;</span><br><span class="line">&lt;activeProfiles&gt;</span><br><span class="line">   &lt;activeProfile&gt;NexusRepo&lt;/activeProfile&gt;</span><br><span class="line">&lt;/activeProfiles&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="三、发布jar包"><a href="#三、发布jar包" class="headerlink" title="三、发布jar包"></a>三、发布jar包</h3><ul>
+<li><p>配置<code>pom.xml</code>文件，添加以下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;distributionManagement&gt;</span><br><span class="line">	&lt;repository&gt;</span><br><span class="line">		&lt;id&gt;maven-releases&lt;/id&gt;</span><br><span class="line">		&lt;name&gt;maven releases&lt;/name&gt;</span><br><span class="line">		&lt;url&gt;http://192.168.56.11:32139/repository/maven-releases/&lt;/url&gt;</span><br><span class="line">	&lt;/repository&gt;</span><br><span class="line">	&lt;snapshotRepository&gt;</span><br><span class="line">		&lt;id&gt;maven-snapshots&lt;/id&gt;</span><br><span class="line">		&lt;name&gt;maven snapshots&lt;/name&gt;</span><br><span class="line">		&lt;url&gt;http://192.168.56.11:32139/repository/maven-snapshots/&lt;/url&gt;</span><br><span class="line">	&lt;/snapshotRepository&gt;</span><br><span class="line">&lt;/distributionManagement&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置<code>settings.xml</code>文件添加以下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;servers&gt;</span><br><span class="line">    &lt;server&gt;</span><br><span class="line">      &lt;id&gt;maven-releases&lt;/id&gt;</span><br><span class="line">      &lt;username&gt;admin&lt;/username&gt;</span><br><span class="line">      &lt;password&gt;admin123&lt;/password&gt;</span><br><span class="line">    &lt;/server&gt;</span><br><span class="line">    &lt;server&gt;</span><br><span class="line">      &lt;id&gt;maven-snapshots&lt;/id&gt;</span><br><span class="line">      &lt;username&gt;admin&lt;/username&gt;</span><br><span class="line">      &lt;password&gt;admin123&lt;/password&gt;</span><br><span class="line">    &lt;/server&gt;</span><br><span class="line">&lt;/servers&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>执行<code>clean deploy</code>语句，进行构建上传。</p>
+</li>
+</ul>
+<h3 id="Nexus相关信息"><a href="#Nexus相关信息" class="headerlink" title="Nexus相关信息"></a>Nexus相关信息</h3><h4 id="这里简单介绍下几种repository的类型"><a href="#这里简单介绍下几种repository的类型" class="headerlink" title="这里简单介绍下几种repository的类型:"></a>这里简单介绍下几种repository的类型:</h4><blockquote>
+<ul>
+<li>hosted，本地仓库，通常我们会部署自己的构件到这一类型的仓库。比如公司的第二方库。</li>
+<li>proxy，代理仓库，它们被用来代理远程的公共仓库，如maven中央仓库。</li>
+<li>group，仓库组，用来合并多个hosted/proxy仓库，当你的项目希望在多个repository使用资源时就不需要多次引用了，只需要引用一个group即可。</li>
+</ul>
+</blockquote>
+<h4 id="Nexus搭建代码清单"><a href="#Nexus搭建代码清单" class="headerlink" title="Nexus搭建代码清单"></a>Nexus搭建代码清单</h4><h5 id="nexus-builder-yaml"><a href="#nexus-builder-yaml" class="headerlink" title="nexus-builder.yaml"></a>nexus-builder.yaml</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Namespace</span><br><span class="line">metadata:</span><br><span class="line">  name: nexus</span><br><span class="line">---</span><br><span class="line">kind: Deployment</span><br><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    app: nexus3</span><br><span class="line">  name: nexus3</span><br><span class="line">  namespace: nexus</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: nexus3</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: nexus3</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: nexus3</span><br><span class="line">        image: registry.saas.hand-china.com/tools/nexus3:3.2.0</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 8081</span><br><span class="line">          protocol: TCP</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - name: nexus-data</span><br><span class="line">          mountPath: /nexus-data</span><br><span class="line">      volumes:</span><br><span class="line">        - name: nexus-data</span><br><span class="line">          hostPath:</span><br><span class="line">            path: /vagrant/nexus-data</span><br><span class="line">---</span><br><span class="line">kind: Service</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    app: nexus3</span><br><span class="line">  name: nexus3</span><br><span class="line">  namespace: nexus</span><br><span class="line">spec:</span><br><span class="line">  type: NodePort</span><br><span class="line">  ports:</span><br><span class="line">  - port: 80</span><br><span class="line">    targetPort: 8081</span><br><span class="line">  selector:</span><br><span class="line">    app: nexus3</span><br></pre></td></tr></table></figure>
+
+<h5 id="nexus-builder-sh"><a href="#nexus-builder-sh" class="headerlink" title="nexus-builder.sh"></a>nexus-builder.sh</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">cat &gt; nexus-builder.yaml &lt;&lt; EOF</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Namespace</span><br><span class="line">metadata:</span><br><span class="line">  name: nexus</span><br><span class="line">---</span><br><span class="line">kind: Deployment</span><br><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    app: nexus3</span><br><span class="line">  name: nexus3</span><br><span class="line">  namespace: nexus</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: nexus3</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: nexus3</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: nexus3</span><br><span class="line">        image: registry.saas.hand-china.com/tools/nexus3:3.2.0</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 8081</span><br><span class="line">          protocol: TCP</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - name: nexus-data</span><br><span class="line">          mountPath: /nexus-data</span><br><span class="line">      volumes:</span><br><span class="line">        - name: nexus-data</span><br><span class="line">          hostPath:</span><br><span class="line">            path: /vagrant/nexus-data</span><br><span class="line">---</span><br><span class="line">kind: Service</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    app: nexus3</span><br><span class="line">  name: nexus3</span><br><span class="line">  namespace: nexus</span><br><span class="line">spec:</span><br><span class="line">  type: NodePort</span><br><span class="line">  ports:</span><br><span class="line">  - port: 80</span><br><span class="line">    targetPort: 8081</span><br><span class="line">  selector:</span><br><span class="line">    app: nexus3</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">kubectl create -f ./nexus-builder.yaml</span><br><span class="line"></span><br><span class="line">HostIP=`hostname -i`</span><br><span class="line">EndPort=`kubectl describe svc -n nexus nexus3 | grep &apos;NodePort:&apos; | awk &apos;&#123;print $3&#125;&apos;`</span><br><span class="line">HostName=`kubectl get pods -n nexus -o wide | grep &apos;nexus3&apos; | awk &apos;&#123;print $7&#125;&apos;`</span><br><span class="line">echo &quot;Now Nexus running on $&#123;HostName&#125;:$&#123;HostIP&#125; : $&#123;EndPort%/*&#125;&quot;</span><br><span class="line">echo &quot;Note:If the page can&apos;t be accessed,please wait a few minutes and refresh the page.&quot;</span><br><span class="line"></span><br><span class="line">sudo rm -f ./nexus-builder.yaml</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+  </section>
+
+  
+
+
+          </div>
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">setzero</p>
+              <div class="site-description motion-element" itemprop="description">回首向来萧瑟处，归去，也无风雨也无晴。</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/TimeBye" title="GitHub &rarr; https://github.com/TimeBye" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://weibo.com/u/2153362077" title="Weibo &rarr; http://weibo.com/u/2153362077" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">setzero</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.1"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.1"></script>
+
+
+
+  
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
