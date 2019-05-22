@@ -96,18 +96,18 @@
 
 
 
-  <meta name="description" content="有时我们会对Docker的一些启动参数进行配置，比如镜像存储在上面位置，日志的大小等。那么我们可以编辑/etc/docker/daemon.json文件进行设置。 12345678910111213&amp;#123;    // 设置为systemd，与K8S默认一致    &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],    // 忽略https    &quot;i">
-<meta name="keywords" content="Doceker">
+  <meta name="description" content="有时我们会对Docker的一些启动参数进行配置，比如镜像存储在上面位置，日志的大小等。那么我们可以编辑/etc/docker/daemon.json文件进行设置。 12345678910111213141516171819&amp;#123;  &quot;registry-mirrors&quot;: [&quot;https://dockerhub.azk8s.cn&quot;,&quot;https://quay.azk8s.cn&quot;],  // 忽">
+<meta name="keywords" content="docker">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Docker配置修改">
+<meta property="og:title" content="Docker 配置修改">
 <meta property="og:url" content="http://yoursite.com/2018/01/12/Docker配置修改/index.html">
 <meta property="og:site_name" content="拾穗">
-<meta property="og:description" content="有时我们会对Docker的一些启动参数进行配置，比如镜像存储在上面位置，日志的大小等。那么我们可以编辑/etc/docker/daemon.json文件进行设置。 12345678910111213&amp;#123;    // 设置为systemd，与K8S默认一致    &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],    // 忽略https    &quot;i">
+<meta property="og:description" content="有时我们会对Docker的一些启动参数进行配置，比如镜像存储在上面位置，日志的大小等。那么我们可以编辑/etc/docker/daemon.json文件进行设置。 12345678910111213141516171819&amp;#123;  &quot;registry-mirrors&quot;: [&quot;https://dockerhub.azk8s.cn&quot;,&quot;https://quay.azk8s.cn&quot;],  // 忽">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-21T14:13:15.169Z">
+<meta property="og:updated_time" content="2019-05-22T10:02:39.004Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Docker配置修改">
-<meta name="twitter:description" content="有时我们会对Docker的一些启动参数进行配置，比如镜像存储在上面位置，日志的大小等。那么我们可以编辑/etc/docker/daemon.json文件进行设置。 12345678910111213&amp;#123;    // 设置为systemd，与K8S默认一致    &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],    // 忽略https    &quot;i">
+<meta name="twitter:title" content="Docker 配置修改">
+<meta name="twitter:description" content="有时我们会对Docker的一些启动参数进行配置，比如镜像存储在上面位置，日志的大小等。那么我们可以编辑/etc/docker/daemon.json文件进行设置。 12345678910111213141516171819&amp;#123;  &quot;registry-mirrors&quot;: [&quot;https://dockerhub.azk8s.cn&quot;,&quot;https://quay.azk8s.cn&quot;],  // 忽">
 
 
 
@@ -125,7 +125,7 @@
   };
 </script>
 
-  <title>Docker配置修改 | 拾穗</title>
+  <title>Docker 配置修改 | 拾穗</title>
   
 
 
@@ -392,7 +392,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Docker配置修改
+          <h1 class="post-title" itemprop="name headline">Docker 配置修改
 
               
             
@@ -435,7 +435,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-05-21 22:13:15" itemprop="dateModified" datetime="2019-05-21T22:13:15+08:00">2019-05-21</time>
+                <time title="Modified: 2019-05-22 18:02:39" itemprop="dateModified" datetime="2019-05-22T18:02:39+08:00">2019-05-22</time>
               
             
           </span>
@@ -470,9 +470,9 @@
 
       
         <p>有时我们会对Docker的一些启动参数进行配置，比如镜像存储在上面位置，日志的大小等。那么我们可以编辑<code>/etc/docker/daemon.json</code>文件进行设置。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    // 设置为systemd，与K8S默认一致</span><br><span class="line">    "exec-opts": ["native.cgroupdriver=systemd"],</span><br><span class="line">    // 忽略https</span><br><span class="line">    "insecure-registries": ["register.local.com"],</span><br><span class="line">    // 若/var/lib的存储空间很小则可以添加此参数</span><br><span class="line">    "data-root": "/root",</span><br><span class="line">    "storage-driver": "overlay",</span><br><span class="line">    "log-driver": "json-file",</span><br><span class="line">    "log-opts": &#123;</span><br><span class="line">      "max-size": "10m"</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"registry-mirrors"</span>: [<span class="string">"https://dockerhub.azk8s.cn"</span>,<span class="string">"https://quay.azk8s.cn"</span>],</span><br><span class="line">  // 忽略https</span><br><span class="line">  "insecure-registries": ["register.local.com"],</span><br><span class="line">  "max-concurrent-downloads": 10,</span><br><span class="line">  "log-driver": "json-file",</span><br><span class="line">  "log-level": "warn",</span><br><span class="line">  "log-opts": &#123;</span><br><span class="line">    "max-size": "10m",</span><br><span class="line">    "max-file": "3"</span><br><span class="line">    &#125;,</span><br><span class="line">  // 若/var/lib的存储空间很小则可以添加此参数</span><br><span class="line">  "data-root": "/var/lib/docker",</span><br><span class="line">  "exec-opts": ["native.cgroupdriver=systemd"],</span><br><span class="line">  "storage-driver": "overlay2",</span><br><span class="line">  "storage-opts": [</span><br><span class="line">    <span class="string">"overlay2.override_kernel_check=true"</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>注意修改之后需要重启docker才能生效。</p>
+<p>注意修改之后需要重启 docker 才能生效。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload &amp;&amp; systemctl restart docker</span><br></pre></td></tr></table></figure>
 
 <p><a href="https://docs.docker.com/engine/reference/commandline/dockerd/" target="_blank" rel="noopener">参考链接</a></p>
@@ -499,7 +499,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Doceker/" rel="tag"># Doceker</a>
+            <a href="/tags/docker/" rel="tag"># docker</a>
           
         </div>
       
@@ -584,7 +584,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-count">10</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -617,7 +617,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">7</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>

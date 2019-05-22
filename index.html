@@ -375,6 +375,212 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/21/安装 elasticsearch 记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="setzero">
+      <meta itemprop="description" content="回首向来萧瑟处，归去，也无风雨也无晴。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾穗">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/05/21/安装 elasticsearch 记录/" class="post-title-link" itemprop="url">安装 elasticsearch 记录</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-05-21 22:58:26" itemprop="dateCreated datePublished" datetime="2019-05-21T22:58:26+08:00">2019-05-21</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-05-22 22:45:21" itemprop="dateModified" datetime="2019-05-22T22:45:21+08:00">2019-05-22</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="安装-JDK"><a href="#安装-JDK" class="headerlink" title="安装 JDK"></a>安装 JDK</h3><ul>
+<li><p>Elasticsearch是java应用，故依赖JDK</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install java-1.8.0-openjdk</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="安装-elasticsearch"><a href="#安装-elasticsearch" class="headerlink" title="安装 elasticsearch"></a>安装 elasticsearch</h3><ul>
+<li><p>下载 <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.7/zip-targz.html" target="_blank" rel="noopener">elasticsearch</a> 并解压，这里创建一个软连接，方便以后切换版本</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.7.2.tar.gz</span><br><span class="line">wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.7.2.tar.gz.sha512</span><br><span class="line">shasum -a 512 -c elasticsearch-6.7.2.tar.gz.sha512 </span><br><span class="line">tar -xzf elasticsearch-6.7.2.tar.gz -C /usr/share</span><br><span class="line">ln -s /usr/share/elasticsearch-6.7.2 /usr/share/elasticsearch</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>若出现 <code>shasum: command not found</code> 报错信息，安装 <code>perl-Digest-SHA</code> 即可</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install perl-Digest-SHA</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建 elasticsearch 用户及组，为了安全考虑 elasticsearch 不能使用有 root 权限的用户进行启动</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">groupadd elasticsearch</span><br><span class="line">useradd elasticsearch -g elasticsearch -p elasticsearch</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建 elasticsearch 数据目录</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data/elasticsearch/&#123;data,logs&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>授予 elasticsearch 用户目录访问权限</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chown -R elasticsearch:elasticsearch /usr/share/elasticsearch*</span><br><span class="line">chown -R elasticsearch:elasticsearch /data/elasticsearch</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>动态<a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/_file_descriptors_and_mmap.html" target="_blank" rel="noopener">调整</a>内核的运行参数</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &apos;vm.max_map_count=262144&apos; &gt; /usr/lib/sysctl.d/elasticsearch.conf</span><br><span class="line">sysctl -p /usr/lib/sysctl.d/elasticsearch.conf</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改相关配置</p>
+<ul>
+<li><p>修改 elasticsearch 配置</p>
+  <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">$</span> <span class="string">vi</span> <span class="string">/usr/share/elasticsearch/config/elasticsearch.yml</span></span><br><span class="line"></span><br><span class="line"><span class="string">cluster.name:</span> <span class="string">dev</span></span><br><span class="line"><span class="string">node.name:</span> <span class="string">node1</span></span><br><span class="line"><span class="string">path.data:</span> <span class="string">/data/elasticsearch/data</span></span><br><span class="line"><span class="string">path.logs:</span> <span class="string">/data/elasticsearch/logs</span></span><br><span class="line"><span class="string">http.port:</span> <span class="number">9200</span></span><br><span class="line"><span class="string">network.host:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line"><span class="comment"># 集群为3个节点，故最小master数量为 ⌊nodes / 2⌋ + 1</span></span><br><span class="line"><span class="string">discovery.zen.minimum_master_nodes:</span> <span class="number">2</span></span><br><span class="line"><span class="string">discovery.zen.ping.unicast.hosts:</span> <span class="string">["192.168.16.227","192.168.16.226","192.168.16.225"]</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改 JVM 配置</p>
+  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ vi /usr/share/elasticsearch/config/jvm.options</span><br><span class="line"></span><br><span class="line">-Xms4g</span><br><span class="line">-Xmx4g</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>添加 systemd 进程守护文件</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt; /usr/lib/systemd/system/elasticsearch.service</span><br><span class="line">[Unit]</span><br><span class="line">Description=Elasticsearch</span><br><span class="line">Documentation=http://www.elastic.co</span><br><span class="line">Wants=network-online.target</span><br><span class="line">After=network-online.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">RuntimeDirectory=elasticsearch</span><br><span class="line">PrivateTmp=true</span><br><span class="line">Environment=ES_HOME=/usr/share/elasticsearch</span><br><span class="line">Environment=PID_DIR=/data/elasticsearch</span><br><span class="line">WorkingDirectory=/usr/share/elasticsearch</span><br><span class="line"></span><br><span class="line">User=elasticsearch</span><br><span class="line">Group=elasticsearch</span><br><span class="line"></span><br><span class="line">ExecStart=/usr/share/elasticsearch/bin/elasticsearch -p $&#123;PID_DIR&#125;/elasticsearch.pid --quiet</span><br><span class="line">Restart=always</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> StandardOutput is configured to redirect to journalctl since</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> some error messages may be logged <span class="keyword">in</span> standard output before</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> elasticsearch logging system is initialized. Elasticsearch</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> stores its logs <span class="keyword">in</span> /var/<span class="built_in">log</span>/elasticsearch and does not use</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> journalctl by default. If you also want to <span class="built_in">enable</span> journalctl</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> logging, you can simply remove the <span class="string">"quiet"</span> option from ExecStart.</span></span><br><span class="line">StandardOutput=journal</span><br><span class="line">StandardError=inherit</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Specifies the maximum file descriptor number that can be opened by this process</span></span><br><span class="line">LimitNOFILE=262144</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Specifies the maximum number of processes</span></span><br><span class="line">LimitNPROC=4096</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Specifies the maximum size of virtual memory</span></span><br><span class="line">LimitAS=infinity</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Specifies the maximum file size</span></span><br><span class="line">LimitFSIZE=infinity</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Disable timeout logic and <span class="built_in">wait</span> until process is stopped</span></span><br><span class="line">TimeoutStopSec=0</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> SIGTERM signal is used to stop the Java process</span></span><br><span class="line">KillSignal=SIGTERM</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Send the signal only to the JVM rather than its control group</span></span><br><span class="line">KillMode=process</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Java process is never killed</span></span><br><span class="line">SendSIGKILL=no</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> When a JVM receives a SIGTERM signal it exits with code 143</span></span><br><span class="line">SuccessExitStatus=143</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Built <span class="keyword">for</span> <span class="variable">$&#123;project.name&#125;</span>-<span class="variable">$&#123;project.version&#125;</span> (<span class="variable">$&#123;project.name&#125;</span>)</span></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置防火墙</p>
+  <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 开启9200端口</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> firewall-cmd --permanent --zone=public --add-port=9200/tcp</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 关闭防火墙(不建议)</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl stop firewalld.service</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重启防火墙</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> firewall-cmd --reload</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 开启防火墙</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl start firewalld.service</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动 elasticsearch</p>
+  <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 设置开机自启</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl <span class="built_in">enable</span> elasticsearch</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 运行 elasticsearch</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl start elasticsearch</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><ul>
+<li><p><a href="https://github.com/elastic/elasticsearch/blob/master/distribution/packages/src/common/systemd/elasticsearch.service" target="_blank" rel="noopener">https://github.com/elastic/elasticsearch/blob/master/distribution/packages/src/common/systemd/elasticsearch.service</a></p>
+</li>
+<li><p><a href="https://www.xuchuruo.cn/Linux%E5%AE%89%E8%A3%85ES%E4%BB%A5%E5%8F%8A%E7%B3%BB%E5%88%97%E6%8F%92%E4%BB%B6.html" target="_blank" rel="noopener">https://www.xuchuruo.cn/Linux%E5%AE%89%E8%A3%85ES%E4%BB%A5%E5%8F%8A%E7%B3%BB%E5%88%97%E6%8F%92%E4%BB%B6.html</a></p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/Runner部署/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -437,7 +643,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-05-21 22:13:15" itemprop="dateModified" datetime="2019-05-21T22:13:15+08:00">2019-05-21</time>
+                <time title="Modified: 2019-05-22 17:02:06" itemprop="dateModified" datetime="2019-05-22T17:02:06+08:00">2019-05-22</time>
               
             
           </span>
@@ -549,7 +755,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2018/07/01/kubeadm升级kubernetes集群/" class="post-title-link" itemprop="url">kubeadm升级kubernetes集群</a>
+                <a href="/2018/07/01/kubeadm升级kubernetes集群/" class="post-title-link" itemprop="url">kubeadm升级集群记录，v1.8.5升级v1.9.9</a>
               
             
           </h1>
@@ -591,7 +797,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-05-21 22:13:15" itemprop="dateModified" datetime="2019-05-21T22:13:15+08:00">2019-05-21</time>
+                <time title="Modified: 2019-05-22 18:09:55" itemprop="dateModified" datetime="2019-05-22T18:09:55+08:00">2019-05-22</time>
               
             
           </span>
@@ -757,7 +963,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-05-21 22:13:15" itemprop="dateModified" datetime="2019-05-21T22:13:15+08:00">2019-05-21</time>
+                <time title="Modified: 2019-05-22 17:02:31" itemprop="dateModified" datetime="2019-05-22T17:02:31+08:00">2019-05-22</time>
               
             
           </span>
@@ -924,7 +1130,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-05-21 22:35:22" itemprop="dateModified" datetime="2019-05-21T22:35:22+08:00">2019-05-21</time>
+                <time title="Modified: 2019-05-22 17:02:16" itemprop="dateModified" datetime="2019-05-22T17:02:16+08:00">2019-05-22</time>
               
             
           </span>
@@ -1094,7 +1300,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-05-21 22:13:15" itemprop="dateModified" datetime="2019-05-21T22:13:15+08:00">2019-05-21</time>
+                <time title="Modified: 2019-05-22 17:02:24" itemprop="dateModified" datetime="2019-05-22T17:02:24+08:00">2019-05-22</time>
               
             
           </span>
@@ -1273,7 +1479,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-05-21 22:39:01" itemprop="dateModified" datetime="2019-05-21T22:39:01+08:00">2019-05-21</time>
+                <time title="Modified: 2019-05-22 17:02:21" itemprop="dateModified" datetime="2019-05-22T17:02:21+08:00">2019-05-22</time>
               
             
           </span>
@@ -1422,7 +1628,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2018/01/12/Docker配置修改/" class="post-title-link" itemprop="url">Docker配置修改</a>
+                <a href="/2018/01/12/Docker配置修改/" class="post-title-link" itemprop="url">Docker 配置修改</a>
               
             
           </h1>
@@ -1464,7 +1670,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-05-21 22:13:15" itemprop="dateModified" datetime="2019-05-21T22:13:15+08:00">2019-05-21</time>
+                <time title="Modified: 2019-05-22 18:02:39" itemprop="dateModified" datetime="2019-05-22T18:02:39+08:00">2019-05-22</time>
               
             
           </span>
@@ -1501,9 +1707,9 @@
         
           
             <p>有时我们会对Docker的一些启动参数进行配置，比如镜像存储在上面位置，日志的大小等。那么我们可以编辑<code>/etc/docker/daemon.json</code>文件进行设置。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    // 设置为systemd，与K8S默认一致</span><br><span class="line">    "exec-opts": ["native.cgroupdriver=systemd"],</span><br><span class="line">    // 忽略https</span><br><span class="line">    "insecure-registries": ["register.local.com"],</span><br><span class="line">    // 若/var/lib的存储空间很小则可以添加此参数</span><br><span class="line">    "data-root": "/root",</span><br><span class="line">    "storage-driver": "overlay",</span><br><span class="line">    "log-driver": "json-file",</span><br><span class="line">    "log-opts": &#123;</span><br><span class="line">      "max-size": "10m"</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"registry-mirrors"</span>: [<span class="string">"https://dockerhub.azk8s.cn"</span>,<span class="string">"https://quay.azk8s.cn"</span>],</span><br><span class="line">  // 忽略https</span><br><span class="line">  "insecure-registries": ["register.local.com"],</span><br><span class="line">  "max-concurrent-downloads": 10,</span><br><span class="line">  "log-driver": "json-file",</span><br><span class="line">  "log-level": "warn",</span><br><span class="line">  "log-opts": &#123;</span><br><span class="line">    "max-size": "10m",</span><br><span class="line">    "max-file": "3"</span><br><span class="line">    &#125;,</span><br><span class="line">  // 若/var/lib的存储空间很小则可以添加此参数</span><br><span class="line">  "data-root": "/var/lib/docker",</span><br><span class="line">  "exec-opts": ["native.cgroupdriver=systemd"],</span><br><span class="line">  "storage-driver": "overlay2",</span><br><span class="line">  "storage-opts": [</span><br><span class="line">    <span class="string">"overlay2.override_kernel_check=true"</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>注意修改之后需要重启docker才能生效。</p>
+<p>注意修改之后需要重启 docker 才能生效。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload &amp;&amp; systemctl restart docker</span><br></pre></td></tr></table></figure>
 
 <p><a href="https://docs.docker.com/engine/reference/commandline/dockerd/" target="_blank" rel="noopener">参考链接</a></p>
@@ -1625,7 +1831,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-05-21 22:13:15" itemprop="dateModified" datetime="2019-05-21T22:13:15+08:00">2019-05-21</time>
+                <time title="Modified: 2019-05-22 17:02:02" itemprop="dateModified" datetime="2019-05-22T17:02:02+08:00">2019-05-22</time>
               
             
           </span>
@@ -1791,7 +1997,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-05-21 22:13:15" itemprop="dateModified" datetime="2019-05-21T22:13:15+08:00">2019-05-21</time>
+                <time title="Modified: 2019-05-22 17:02:13" itemprop="dateModified" datetime="2019-05-22T17:02:13+08:00">2019-05-22</time>
               
             
           </span>
@@ -2013,7 +2219,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-count">10</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2046,7 +2252,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">7</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
