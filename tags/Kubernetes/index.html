@@ -800,6 +800,36 @@
   
 
   
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'XtdzaNNhj3QzwpLfEPRyPB4f-gzGzoHsz',
+    appKey: 'PVBOEPyETkedTsomHnvrpC63',
+    placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn'
+  });
+</script>
+
+
 
 
 
@@ -861,7 +891,7 @@
               url: 'https://' + api_server + '/1.1' + url,
               headers: {
                 'X-LC-Id': 'XtdzaNNhj3QzwpLfEPRyPB4f-gzGzoHsz',
-                'X-LC-Key': 'Gz52lWp7QtND0bJmKq7OgWBn',
+                'X-LC-Key': 'PVBOEPyETkedTsomHnvrpC63',
                 'Content-Type': 'application/json',
               },
               data: data
