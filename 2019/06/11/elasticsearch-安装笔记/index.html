@@ -118,18 +118,20 @@
 
 
 
-  <meta name="description" content="安装 JDK Elasticsearch是java应用，故依赖JDK   1yum install java-1.8.0-openjdk    安装 elasticsearch 下载 elasticsearch 并解压，这里创建一个软连接，方便以后切换版本   12345wget https://artifacts.elastic.co/downloads/elasticsearch/elasti">
+  <meta name="description" content="什么是 ElasticsearchElasticsearch是一个基于Lucene库的搜索引擎。它提供了一个分布式、支持多租户的全文搜索引擎，具有HTTP Web接口和无模式JSON文档。Elasticsearch是用Java开发的，并在Apache许可证下作为开源软件发布。官方客户端在Java、.NET（C#）、PHP、Python、Apache Groovy、Ruby和许多其他语言中都是可用">
 <meta name="keywords" content="elasticsearch">
 <meta property="og:type" content="article">
-<meta property="og:title" content="安装 elasticsearch 记录">
-<meta property="og:url" content="http://yoursite.com/2019/05/21/安装 elasticsearch 记录/index.html">
+<meta property="og:title" content="elasticsearch 安装笔记">
+<meta property="og:url" content="https://timebye.github.io/2019/06/11/elasticsearch-安装笔记/index.html">
 <meta property="og:site_name" content="拾穗">
-<meta property="og:description" content="安装 JDK Elasticsearch是java应用，故依赖JDK   1yum install java-1.8.0-openjdk    安装 elasticsearch 下载 elasticsearch 并解压，这里创建一个软连接，方便以后切换版本   12345wget https://artifacts.elastic.co/downloads/elasticsearch/elasti">
+<meta property="og:description" content="什么是 ElasticsearchElasticsearch是一个基于Lucene库的搜索引擎。它提供了一个分布式、支持多租户的全文搜索引擎，具有HTTP Web接口和无模式JSON文档。Elasticsearch是用Java开发的，并在Apache许可证下作为开源软件发布。官方客户端在Java、.NET（C#）、PHP、Python、Apache Groovy、Ruby和许多其他语言中都是可用">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-22T14:45:21.495Z">
+<meta property="og:image" content="https://timebye.github.io/images/2019-06-11-elasticsearch-%E5%AE%89%E8%A3%85%E7%AC%94%E8%AE%B0/2019-06-11-13-45-52.png?80">
+<meta property="og:updated_time" content="2019-06-11T09:12:08.845Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="安装 elasticsearch 记录">
-<meta name="twitter:description" content="安装 JDK Elasticsearch是java应用，故依赖JDK   1yum install java-1.8.0-openjdk    安装 elasticsearch 下载 elasticsearch 并解压，这里创建一个软连接，方便以后切换版本   12345wget https://artifacts.elastic.co/downloads/elasticsearch/elasti">
+<meta name="twitter:title" content="elasticsearch 安装笔记">
+<meta name="twitter:description" content="什么是 ElasticsearchElasticsearch是一个基于Lucene库的搜索引擎。它提供了一个分布式、支持多租户的全文搜索引擎，具有HTTP Web接口和无模式JSON文档。Elasticsearch是用Java开发的，并在Apache许可证下作为开源软件发布。官方客户端在Java、.NET（C#）、PHP、Python、Apache Groovy、Ruby和许多其他语言中都是可用">
+<meta name="twitter:image" content="https://timebye.github.io/images/2019-06-11-elasticsearch-%E5%AE%89%E8%A3%85%E7%AC%94%E8%AE%B0/2019-06-11-13-45-52.png?80">
 
 
 
@@ -137,7 +139,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2019/05/21/安装 elasticsearch 记录/">
+  <link rel="canonical" href="https://timebye.github.io/2019/06/11/elasticsearch-安装笔记/">
 
 
 
@@ -147,7 +149,7 @@
   };
 </script>
 
-  <title>安装 elasticsearch 记录 | 拾穗</title>
+  <title>elasticsearch 安装笔记 | 拾穗</title>
   
 
 
@@ -186,6 +188,7 @@
   </style>
 </noscript>
 
+  <script src="/js/hexo_resize_image.js"></script>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
@@ -297,57 +300,6 @@
     <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-schedule">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/schedule/" rel="section"><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>日程表</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-sitemap">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-about">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
-
-  </li>
 
       
       
@@ -369,6 +321,13 @@
     </header>
 
     
+  
+  
+
+  
+
+  <a href="https://github.com/timebye" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
 
 
     <main id="main" class="main">
@@ -397,7 +356,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/21/安装 elasticsearch 记录/">
+    <link itemprop="mainEntityOfPage" href="https://timebye.github.io/2019/06/11/elasticsearch-安装笔记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="setzero">
@@ -414,7 +373,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">安装 elasticsearch 记录
+          <h1 class="post-title" itemprop="name headline">elasticsearch 安装笔记
 
               
             
@@ -440,24 +399,12 @@
                 
               
 
-              <time title="创建时间：2019-05-21 22:58:26" itemprop="dateCreated datePublished" datetime="2019-05-21T22:58:26+08:00">2019-05-21</time>
+              <time title="创建时间：2019-06-11 14:10:44 / 修改时间：17:12:08" itemprop="dateCreated datePublished" datetime="2019-06-11T14:10:44+08:00">2019-06-11</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-05-22 22:45:21" itemprop="dateModified" datetime="2019-05-22T22:45:21+08:00">2019-05-22</time>
               
             
           </span>
@@ -475,8 +422,8 @@
                 </span>
             
                 <span class="post-meta-item-text">评论数：</span>
-                <a href="/2019/05/21/安装 elasticsearch 记录/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2019/05/21/安装 elasticsearch 记录/" itemprop="commentCount"></span>
+                <a href="/2019/06/11/elasticsearch-安装笔记/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/06/11/elasticsearch-安装笔记/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -484,7 +431,7 @@
 
           
           
-            <span id="/2019/05/21/安装 elasticsearch 记录/" class="leancloud_visitors" data-flag-title="安装 elasticsearch 记录">
+            <span id="/2019/06/11/elasticsearch-安装笔记/" class="leancloud_visitors" data-flag-title="elasticsearch 安装笔记">
               <span class="post-meta-divider">|</span>
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
@@ -515,9 +462,13 @@
       
 
       
-        <h3 id="安装-JDK"><a href="#安装-JDK" class="headerlink" title="安装 JDK"></a>安装 JDK</h3><ul>
+        <p><img src="/images/2019-06-11-elasticsearch-%E5%AE%89%E8%A3%85%E7%AC%94%E8%AE%B0/2019-06-11-13-45-52.png?80" alt></p>
+<h3 id="什么是-Elasticsearch"><a href="#什么是-Elasticsearch" class="headerlink" title="什么是 Elasticsearch"></a>什么是 Elasticsearch</h3><p>Elasticsearch是一个基于Lucene库的搜索引擎。它提供了一个分布式、支持多租户的全文搜索引擎，具有HTTP Web接口和无模式JSON文档。Elasticsearch是用Java开发的，并在Apache许可证下作为开源软件发布。官方客户端在Java、.NET（C#）、PHP、Python、Apache Groovy、Ruby和许多其他语言中都是可用的。根据DB-Engines的排名显示，Elasticsearch是最受欢迎的企业搜索引擎，其次是Apache Solr，也是基于Lucene。</p>
+<a id="more"></a>
+
+<h3 id="安装-JDK"><a href="#安装-JDK" class="headerlink" title="安装 JDK"></a>安装 JDK</h3><ul>
 <li><p>Elasticsearch是java应用，故依赖JDK</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install java-1.8.0-openjdk</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y java-1.8.0-openjdk wget</span><br></pre></td></tr></table></figure>
 
 </li>
 </ul>
@@ -526,7 +477,7 @@
   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.7.2.tar.gz</span><br><span class="line">wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.7.2.tar.gz.sha512</span><br><span class="line">shasum -a 512 -c elasticsearch-6.7.2.tar.gz.sha512 </span><br><span class="line">tar -xzf elasticsearch-6.7.2.tar.gz -C /usr/share</span><br><span class="line">ln -s /usr/share/elasticsearch-6.7.2 /usr/share/elasticsearch</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>若出现 <code>shasum: command not found</code> 报错信息，安装 <code>perl-Digest-SHA</code> 即可</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install perl-Digest-SHA</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y perl-Digest-SHA</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>创建 elasticsearch 用户及组，为了安全考虑 elasticsearch 不能使用有 root 权限的用户进行启动</p>
   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">groupadd elasticsearch</span><br><span class="line">useradd elasticsearch -g elasticsearch -p elasticsearch</span><br></pre></td></tr></table></figure>
@@ -543,7 +494,7 @@
 <li><p>修改相关配置</p>
 <ul>
 <li><p>修改 elasticsearch 配置</p>
-  <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">$</span> <span class="string">vi</span> <span class="string">/usr/share/elasticsearch/config/elasticsearch.yml</span></span><br><span class="line"></span><br><span class="line"><span class="string">cluster.name:</span> <span class="string">dev</span></span><br><span class="line"><span class="string">node.name:</span> <span class="string">node1</span></span><br><span class="line"><span class="string">path.data:</span> <span class="string">/data/elasticsearch/data</span></span><br><span class="line"><span class="string">path.logs:</span> <span class="string">/data/elasticsearch/logs</span></span><br><span class="line"><span class="string">http.port:</span> <span class="number">9200</span></span><br><span class="line"><span class="string">network.host:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line"><span class="comment"># 集群为3个节点，故最小master数量为 ⌊nodes / 2⌋ + 1</span></span><br><span class="line"><span class="string">discovery.zen.minimum_master_nodes:</span> <span class="number">2</span></span><br><span class="line"><span class="string">discovery.zen.ping.unicast.hosts:</span> <span class="string">["192.168.16.227","192.168.16.226","192.168.16.225"]</span></span><br></pre></td></tr></table></figure>
+  <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vi /usr/share/elasticsearch/config/elasticsearch.yml</span></span><br><span class="line"></span><br><span class="line"><span class="string">cluster.name:</span> <span class="string">dev</span></span><br><span class="line"><span class="string">node.name:</span> <span class="string">node1</span></span><br><span class="line"><span class="string">path.data:</span> <span class="string">/data/elasticsearch/data</span></span><br><span class="line"><span class="string">path.logs:</span> <span class="string">/data/elasticsearch/logs</span></span><br><span class="line"><span class="string">network.host:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line"><span class="string">http.port:</span> <span class="number">9200</span></span><br><span class="line"><span class="string">discovery.zen.ping.unicast.hosts:</span> <span class="string">["192.168.16.227","192.168.16.226","192.168.16.225"]</span></span><br><span class="line"><span class="comment"># 集群为3个节点，故最小master数量为 ⌊nodes / 2⌋ + 1</span></span><br><span class="line"><span class="string">discovery.zen.minimum_master_nodes:</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>修改 JVM 配置</p>
   <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ vi /usr/share/elasticsearch/config/jvm.options</span><br><span class="line"></span><br><span class="line">-Xms4g</span><br><span class="line">-Xmx4g</span><br></pre></td></tr></table></figure>
@@ -551,10 +502,10 @@
 </ul>
 </li>
 <li><p>添加 systemd 进程守护文件</p>
-  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt; /usr/lib/systemd/system/elasticsearch.service</span><br><span class="line">[Unit]</span><br><span class="line">Description=Elasticsearch</span><br><span class="line">Documentation=http://www.elastic.co</span><br><span class="line">Wants=network-online.target</span><br><span class="line">After=network-online.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">RuntimeDirectory=elasticsearch</span><br><span class="line">PrivateTmp=true</span><br><span class="line">Environment=ES_HOME=/usr/share/elasticsearch</span><br><span class="line">Environment=PID_DIR=/data/elasticsearch</span><br><span class="line">WorkingDirectory=/usr/share/elasticsearch</span><br><span class="line"></span><br><span class="line">User=elasticsearch</span><br><span class="line">Group=elasticsearch</span><br><span class="line"></span><br><span class="line">ExecStart=/usr/share/elasticsearch/bin/elasticsearch -p $&#123;PID_DIR&#125;/elasticsearch.pid --quiet</span><br><span class="line">Restart=always</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> StandardOutput is configured to redirect to journalctl since</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> some error messages may be logged <span class="keyword">in</span> standard output before</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> elasticsearch logging system is initialized. Elasticsearch</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> stores its logs <span class="keyword">in</span> /var/<span class="built_in">log</span>/elasticsearch and does not use</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> journalctl by default. If you also want to <span class="built_in">enable</span> journalctl</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> logging, you can simply remove the <span class="string">"quiet"</span> option from ExecStart.</span></span><br><span class="line">StandardOutput=journal</span><br><span class="line">StandardError=inherit</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Specifies the maximum file descriptor number that can be opened by this process</span></span><br><span class="line">LimitNOFILE=262144</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Specifies the maximum number of processes</span></span><br><span class="line">LimitNPROC=4096</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Specifies the maximum size of virtual memory</span></span><br><span class="line">LimitAS=infinity</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Specifies the maximum file size</span></span><br><span class="line">LimitFSIZE=infinity</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Disable timeout logic and <span class="built_in">wait</span> until process is stopped</span></span><br><span class="line">TimeoutStopSec=0</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> SIGTERM signal is used to stop the Java process</span></span><br><span class="line">KillSignal=SIGTERM</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Send the signal only to the JVM rather than its control group</span></span><br><span class="line">KillMode=process</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Java process is never killed</span></span><br><span class="line">SendSIGKILL=no</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> When a JVM receives a SIGTERM signal it exits with code 143</span></span><br><span class="line">SuccessExitStatus=143</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Built <span class="keyword">for</span> <span class="variable">$&#123;project.name&#125;</span>-<span class="variable">$&#123;project.version&#125;</span> (<span class="variable">$&#123;project.name&#125;</span>)</span></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">$ vi /usr/lib/systemd/system/elasticsearch.service</span><br><span class="line"></span><br><span class="line">[Unit]</span><br><span class="line">Description=Elasticsearch</span><br><span class="line">Documentation=http://www.elastic.co</span><br><span class="line">Wants=network-online.target</span><br><span class="line">After=network-online.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">RuntimeDirectory=elasticsearch</span><br><span class="line">PrivateTmp=<span class="literal">true</span></span><br><span class="line">Environment=ES_HOME=/usr/share/elasticsearch</span><br><span class="line">Environment=PID_DIR=/data/elasticsearch</span><br><span class="line">WorkingDirectory=/usr/share/elasticsearch</span><br><span class="line"></span><br><span class="line">User=elasticsearch</span><br><span class="line">Group=elasticsearch</span><br><span class="line"></span><br><span class="line">ExecStart=/usr/share/elasticsearch/bin/elasticsearch -p <span class="variable">$&#123;PID_DIR&#125;</span>/elasticsearch.pid --quiet</span><br><span class="line">Restart=always</span><br><span class="line"></span><br><span class="line"><span class="comment"># StandardOutput is configured to redirect to journalctl since</span></span><br><span class="line"><span class="comment"># some error messages may be logged in standard output before</span></span><br><span class="line"><span class="comment"># elasticsearch logging system is initialized. Elasticsearch</span></span><br><span class="line"><span class="comment"># stores its logs in /var/log/elasticsearch and does not use</span></span><br><span class="line"><span class="comment"># journalctl by default. If you also want to enable journalctl</span></span><br><span class="line"><span class="comment"># logging, you can simply remove the "quiet" option from ExecStart.</span></span><br><span class="line">StandardOutput=journal</span><br><span class="line">StandardError=inherit</span><br><span class="line"></span><br><span class="line"><span class="comment"># Specifies the maximum file descriptor number that can be opened by this process</span></span><br><span class="line">LimitNOFILE=262144</span><br><span class="line"></span><br><span class="line"><span class="comment"># Specifies the maximum number of processes</span></span><br><span class="line">LimitNPROC=4096</span><br><span class="line"></span><br><span class="line"><span class="comment"># Specifies the maximum size of virtual memory</span></span><br><span class="line">LimitAS=infinity</span><br><span class="line"></span><br><span class="line"><span class="comment"># Specifies the maximum file size</span></span><br><span class="line">LimitFSIZE=infinity</span><br><span class="line"></span><br><span class="line"><span class="comment"># Disable timeout logic and wait until process is stopped</span></span><br><span class="line">TimeoutStopSec=0</span><br><span class="line"></span><br><span class="line"><span class="comment"># SIGTERM signal is used to stop the Java process</span></span><br><span class="line">KillSignal=SIGTERM</span><br><span class="line"></span><br><span class="line"><span class="comment"># Send the signal only to the JVM rather than its control group</span></span><br><span class="line">KillMode=process</span><br><span class="line"></span><br><span class="line"><span class="comment"># Java process is never killed</span></span><br><span class="line">SendSIGKILL=no</span><br><span class="line"></span><br><span class="line"><span class="comment"># When a JVM receives a SIGTERM signal it exits with code 143</span></span><br><span class="line">SuccessExitStatus=143</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line"></span><br><span class="line"><span class="comment"># Built for $&#123;project.name&#125;-$&#123;project.version&#125; ($&#123;project.name&#125;)</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>设置防火墙</p>
-  <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 开启9200端口</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> firewall-cmd --permanent --zone=public --add-port=9200/tcp</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 关闭防火墙(不建议)</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl stop firewalld.service</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重启防火墙</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> firewall-cmd --reload</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 开启防火墙</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl start firewalld.service</span></span><br></pre></td></tr></table></figure>
+  <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 开启9200端口</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> firewall-cmd --permanent --zone=public --add-port=9200/tcp</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 关闭防火墙(不建议)</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl stop firewalld.service</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl <span class="built_in">disable</span> firewalld.service</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重启防火墙</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> firewall-cmd --reload</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 开启防火墙</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl start firewalld.service</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>启动 elasticsearch</p>
   <figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 设置开机自启</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl <span class="built_in">enable</span> elasticsearch</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 运行 elasticsearch</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl start elasticsearch</span></span><br></pre></td></tr></table></figure>
@@ -603,8 +554,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/01/Runner部署/" rel="next" title="Gitlab Runner部署">
-                <i class="fa fa-chevron-left"></i> Gitlab Runner部署
+              <a href="/2019/05/26/实现-Ingress-Https-常用工具/" rel="next" title="实现 Ingress Https 常用工具">
+                <i class="fa fa-chevron-left"></i> 实现 Ingress Https 常用工具
               </a>
             
           </div>
@@ -684,7 +635,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -721,7 +672,23 @@
                     
                       
                     
-                    <span class="site-state-item-count">9</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">17</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -785,7 +752,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-JDK"><span class="nav-number">1.</span> <span class="nav-text">安装 JDK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-elasticsearch"><span class="nav-number">2.</span> <span class="nav-text">安装 elasticsearch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文档"><span class="nav-number">3.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是-Elasticsearch"><span class="nav-number">1.</span> <span class="nav-text">什么是 Elasticsearch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-JDK"><span class="nav-number">2.</span> <span class="nav-text">安装 JDK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-elasticsearch"><span class="nav-number">3.</span> <span class="nav-text">安装 elasticsearch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文档"><span class="nav-number">4.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
             
 
           </div>
