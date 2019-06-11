@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<!--
+                           _ooOoo_
+                          o8888888o
+                          88" . "88
+                          (| -_- |)
+                          O\  =  /O
+                       ____/`---'\____
+                     .'  \\|     |//  `.
+                    /  \\|||  :  |||//  \
+                   /  _||||| -:- |||||-  \
+                   |   | \\\  -  /// |   |
+                   | \_|  ''\---/''  |   |
+                   \  .-\__  `-`  ___/-. /
+                 ___`. .'  /--.--\  `. . __
+              ."" '<  `.___\_<|>_/___.'  >'"".
+             | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+             \  \ `-.   \_ __\ /__ _/   .-` /  /
+        ======`-.____`-.___\_____/___.-`____.-'======
+                           `=---='
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                 佛祖保佑       永无BUG  By:- timebye.github.io
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Harbor简介Harbor是一个用于存储和分发Docker镜像的企业级Registry服务器，通过添加一些企业必需的功能特性，例如安全、标识和管理等，扩展了开源的Docker Distribution。作为一个企业级私有Registry服务器，Harbor提供了更好的性能和安全。提升用户使用Registry构建和运行环境传输镜像的效率。Harbor支持安装在多个Registry节点的镜像资源复">
+<meta name="keywords" content="harbor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Harbor存储回收">
+<meta property="og:url" content="https://timebye.github.io/2018/09/21/Harbor存储回收/index.html">
+<meta property="og:site_name" content="拾穗">
+<meta property="og:description" content="Harbor简介Harbor是一个用于存储和分发Docker镜像的企业级Registry服务器，通过添加一些企业必需的功能特性，例如安全、标识和管理等，扩展了开源的Docker Distribution。作为一个企业级私有Registry服务器，Harbor提供了更好的性能和安全。提升用户使用Registry构建和运行环境传输镜像的效率。Harbor支持安装在多个Registry节点的镜像资源复">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://timebye.github.io/images/2018-09-21-Harbor%E5%AD%98%E5%82%A8%E5%9B%9E%E6%94%B6/2019-06-11-20-09-57.png?15">
+<meta property="og:image" content="https://timebye.github.io/images/2018-09-21-Harbor%E5%AD%98%E5%82%A8%E5%9B%9E%E6%94%B6/2019-06-11-20-10-27.png">
+<meta property="og:updated_time" content="2019-06-11T12:13:11.518Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Harbor存储回收">
+<meta name="twitter:description" content="Harbor简介Harbor是一个用于存储和分发Docker镜像的企业级Registry服务器，通过添加一些企业必需的功能特性，例如安全、标识和管理等，扩展了开源的Docker Distribution。作为一个企业级私有Registry服务器，Harbor提供了更好的性能和安全。提升用户使用Registry构建和运行环境传输镜像的效率。Harbor支持安装在多个Registry节点的镜像资源复">
+<meta name="twitter:image" content="https://timebye.github.io/images/2018-09-21-Harbor%E5%AD%98%E5%82%A8%E5%9B%9E%E6%94%B6/2019-06-11-20-09-57.png?15">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://timebye.github.io/2018/09/21/Harbor存储回收/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Harbor存储回收 | 拾穗</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <script src="/js/hexo_resize_image.js"></script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拾穗</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+
+  
+
+  <a href="https://github.com/timebye" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://timebye.github.io/2018/09/21/Harbor存储回收/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="setzero">
+      <meta itemprop="description" content="回首向来萧瑟处，归去，也无风雨也无晴。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾穗">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Harbor存储回收
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-09-21 20:05:15" itemprop="dateCreated datePublished" datetime="2018-09-21T20:05:15+08:00">2018-09-21</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/应用安装与使用/" itemprop="url" rel="index"><span itemprop="name">应用安装与使用</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2018/09/21/Harbor存储回收/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/09/21/Harbor存储回收/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+            <span id="/2018/09/21/Harbor存储回收/" class="leancloud_visitors" data-flag-title="Harbor存储回收">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读次数：</span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="/images/2018-09-21-Harbor%E5%AD%98%E5%82%A8%E5%9B%9E%E6%94%B6/2019-06-11-20-09-57.png?15" alt></p>
+<h3 id="Harbor简介"><a href="#Harbor简介" class="headerlink" title="Harbor简介"></a>Harbor简介</h3><p>Harbor是一个用于存储和分发Docker镜像的企业级Registry服务器，通过添加一些企业必需的功能特性，例如安全、标识和管理等，扩展了开源的Docker Distribution。作为一个企业级私有Registry服务器，Harbor提供了更好的性能和安全。提升用户使用Registry构建和运行环境传输镜像的效率。Harbor支持安装在多个Registry节点的镜像资源复制，镜像全部保存在私有Registry中， 确保数据和知识产权在公司内部网络中管控。另外，Harbor也提供了高级的安全特性，诸如用户管理，访问控制和活动审计等。现在Harbour已成为由<a href="https://cncf.io/" target="_blank" rel="noopener">Cloud Native Computing Foundation</a>（CNCF）托管的项目。</p>
+<a id="more"></a>
+
+<h3 id="Harbor存储回收"><a href="#Harbor存储回收" class="headerlink" title="Harbor存储回收"></a>Harbor存储回收</h3><p>在使用Harbor很长一段时间后镜像所占存储空间越来越大，我们就需要对不再会使用到的镜像进行删除回收它所占用到的空间以免浪费资源。删除镜像的操作显然是一个非常有重复性的操作，那么我们就可以定制一些规则调用Harbor的API进行删除。这些操作我们将会使用到Harbor的以下API：</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>URL</th>
+<th>Remarks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET</td>
+<td>/projects</td>
+<td>List projects</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/repositories</td>
+<td>Get repositories accompany with relevant project and repo name.</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/repositories/{repo_name}/tags</td>
+<td>Get tags of a relevant repository.</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>/repositories/{repo_name}/tags/{tag}</td>
+<td>Delete a tag in a repository.</td>
+</tr>
+</tbody></table>
+<p>首先获取所有项目列表，依次遍历项目下所有的仓库，将仓库下的镜像<code>tag</code>逐一列出进行规则比对，若包含定义的关键字或匹配的正则表达式进行删除，不具备条件的则略过。此操作只是进行软删除，不回收镜像实际所占物理存储。比对tag是否满足删除规则的代码如下：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">needDeleteTag</span><span class="params">(tag harbor.TagResp, count *<span class="keyword">int</span>)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	baseTime, _ := time.ParseDuration(<span class="string">"1h"</span>)</span><br><span class="line">	<span class="keyword">if</span> time.Now().Sub(tag.Created) &lt; deletePolicy.IntervalHour*baseTime || *count &lt; deletePolicy.MixCount &#123;</span><br><span class="line">		*count += <span class="number">1</span></span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">	match, err := regexp.MatchString(deletePolicy.Tags.Exclude.Regex, tag.Name)</span><br><span class="line">	checkErr(err)</span><br><span class="line">	<span class="keyword">if</span> match &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">	match, err = regexp.MatchString(deletePolicy.Tags.Exclude.KeysRegex, tag.Name)</span><br><span class="line">	checkErr(err)</span><br><span class="line">	<span class="keyword">if</span> match &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">	match, err = regexp.MatchString(deletePolicy.Tags.Include.Regex, tag.Name)</span><br><span class="line">	checkErr(err)</span><br><span class="line">	<span class="keyword">if</span> match &#123;</span><br><span class="line">		glog.V(<span class="number">2</span>).Infof(<span class="string">"%s match Tags.Regex: %s"</span>, tag.Name, deletePolicy.Tags.Include.Regex)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">	&#125;</span><br><span class="line">	match, err = regexp.MatchString(deletePolicy.Tags.Include.KeysRegex, tag.Name)</span><br><span class="line">	checkErr(err)</span><br><span class="line">	<span class="keyword">if</span> match &#123;</span><br><span class="line">		glog.V(<span class="number">2</span>).Infof(<span class="string">"%s match Tags.KeysRegex: %s"</span>, tag.Name, deletePolicy.Tags.Include.KeysRegex)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>项目代码已上传至<a href="github.com/TimeBye/harbor-cleaner">Github</a>，可使用<code>go get</code>进行安装或直接<a href="https://github.com/TimeBye/harbor-cleaner/releases" target="_blank" rel="noopener">下载</a>编译好的可执行文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get -u github.com/TimeBye/harbor-cleaner</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用harbor-cleaner进行软删除"><a href="#使用harbor-cleaner进行软删除" class="headerlink" title="使用harbor-cleaner进行软删除"></a>使用harbor-cleaner进行软删除</h3><ul>
+<li><p>编写配置文件<code>delete_policy.yml</code></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 仓库相关信息</span></span><br><span class="line"><span class="attr">registry_url:</span> <span class="attr">https://registry.example.com/</span></span><br><span class="line"><span class="attr">username:</span> <span class="string">admin</span></span><br><span class="line"><span class="attr">password:</span> <span class="string">password</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 仅模拟运行，不真实删除，默认启用</span></span><br><span class="line"><span class="attr">dry_run:</span> <span class="literal">true</span></span><br><span class="line"><span class="comment"># 删除以现在时间为基础以前的镜像，单位为小时，默认72</span></span><br><span class="line"><span class="attr">interval_hour:</span> <span class="number">72</span></span><br><span class="line"><span class="comment"># 至少保留镜像个数，默认10</span></span><br><span class="line"><span class="attr">mix_count:</span> <span class="number">10</span></span><br><span class="line"><span class="comment"># 忽略这个项目下所有镜像</span></span><br><span class="line"><span class="attr">ignore_projects:</span></span><br><span class="line"><span class="comment"># 项目删除策略</span></span><br><span class="line"><span class="attr">projects:</span></span><br><span class="line">  <span class="comment"># 是否删除空项目</span></span><br><span class="line"><span class="attr">  delete_empty:</span> <span class="literal">false</span></span><br><span class="line">  <span class="comment"># 需删除的关键字</span></span><br><span class="line"><span class="attr">  include:</span></span><br><span class="line">    <span class="comment"># 按关键字进行删除</span></span><br><span class="line"><span class="attr">    keys:</span></span><br><span class="line">    <span class="comment"># 按正则表达式删除</span></span><br><span class="line"><span class="attr">    regex:</span></span><br><span class="line">  <span class="comment"># 排除策略，删除策略与排除策略都匹配，以排除策略为准</span></span><br><span class="line"><span class="attr">  exclude:</span></span><br><span class="line">    <span class="comment"># 按关键字进行排除</span></span><br><span class="line"><span class="attr">    keys:</span></span><br><span class="line">    <span class="comment"># 按正则表达式排除</span></span><br><span class="line"><span class="attr">    regex:</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 镜像tag删除策略</span></span><br><span class="line"><span class="attr">tags:</span></span><br><span class="line">  <span class="comment"># 删除策略</span></span><br><span class="line"><span class="attr">  include:</span></span><br><span class="line">    <span class="comment"># 按关键字进行删除</span></span><br><span class="line"><span class="attr">    keys:</span> <span class="string">dev,test</span></span><br><span class="line">    <span class="comment"># 按正则表达式删除</span></span><br><span class="line"><span class="attr">    regex:</span></span><br><span class="line">  <span class="comment"># 排除策略，删除策略与排除策略都匹配，以排除策略为准</span></span><br><span class="line"><span class="attr">  exclude:</span></span><br><span class="line">    <span class="comment"># 按关键字进行排除</span></span><br><span class="line"><span class="attr">    keys:</span></span><br><span class="line">    <span class="comment"># 按正则表达式排除</span></span><br><span class="line"><span class="attr">    regex:</span> <span class="string">latest|master|^[Vv]?(\d+(\.\d+)&#123;1,2&#125;)$</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行并指定配置文件位置</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">harbor-cleaner -f delete_policy.yml</span><br></pre></td></tr></table></figure>
+
+<h3 id="存储回收"><a href="#存储回收" class="headerlink" title="存储回收"></a>存储回收</h3><h4 id="Harbor-v1-7-0及以上版本"><a href="#Harbor-v1-7-0及以上版本" class="headerlink" title="Harbor v1.7.0及以上版本"></a>Harbor v1.7.0及以上版本</h4><p>Harbor从v1.7.0版本开始支持不停机进行<a href="https://github.com/goharbor/harbor/blob/master/docs/user_guide.md#online-garbage-collection" target="_blank" rel="noopener">在线存储回收</a>。在调用本程序进行软删除后，系统管理员可以通过单击“管理”下“配置”部分的“垃圾回收”选项卡来配置或触发存储回收。</p>
+<p><img src="/images/2018-09-21-Harbor%E5%AD%98%E5%82%A8%E5%9B%9E%E6%94%B6/2019-06-11-20-10-27.png" alt></p>
+<p>👋 <strong>注意</strong> 👋在执行存储回收时，Harbor将进入只读模式，并且禁止对 docker registry 进行任何修改。换而言之就是此时只能拉镜像不能推镜像。</p>
+<h4 id="Harbor-1-7-0以前版本"><a href="#Harbor-1-7-0以前版本" class="headerlink" title="Harbor 1.7.0以前版本"></a>Harbor 1.7.0以前版本</h4><p>Harbor从v1.7.0以前版本进行存储回收时需要手动切断外部访问以达到<code>禁止对 docker registry 进行任何修改</code>的目的。回收镜像所占存储<a href="https://github.com/docker/docker.github.io/blob/master/registry/garbage-collection.md#about-garbage-collection" target="_blank" rel="noopener">参考文档</a>。</p>
+<ul>
+<li><p>切断外部访问入口</p>
+</li>
+<li><p>进入到<code>registry</code>容器中执行存储回收命令</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 测试回收，不会真回收，可在日志中看到要回收的镜像</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> registry garbage-collect --dry-run /etc/registry/config.yml</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 执行回收，没有后悔药</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> registry garbage-collect /etc/registry/config.yml</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="不理想的地方"><a href="#不理想的地方" class="headerlink" title="不理想的地方"></a>不理想的地方</h4><p>不论是哪个版本的Harbor进行存储回收都是使用<code>docker registry</code>官方的命令进行回收，但回收空间太少，很多manifests仍没删除。那就只有扫描镜像仓库存储文件，通过<code>docker registry api</code>删除无用的manifests。这里可参考使用<code>mortensrasmussen</code>的<a href="https://hub.docker.com/r/mortensrasmussen/docker-registry-manifest-cleanup/" target="_blank" rel="noopener">docker-registry-manifest-cleanup</a>项目。</p>
+<ul>
+<li>使用docker-registry-manifest-cleanup当前最新版本进行存储回收<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 执行以下脚本尝试通过api模拟删除manifests</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> docker run -it \</span></span><br><span class="line">    -v /home/someuser/registry:/registry \</span><br><span class="line">    -e REGISTRY_URL=https://registry.example.com \</span><br><span class="line">    -e DRY_RUN="true" \</span><br><span class="line">    -e SELF_SIGNED_CERT="true" \</span><br><span class="line">    -e REGISTRY_AUTH="myuser:sickpassword" \</span><br><span class="line">    mortensrasmussen/docker-registry-manifest-cleanup:1.1.1</span><br><span class="line"><span class="meta">#</span><span class="bash"> 如上一步没有报错，执行以下脚本，真正删除</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> docker run -it \</span></span><br><span class="line">    -v /home/someuser/registry:/registry \</span><br><span class="line">    -e REGISTRY_URL=https://registry.example.com \</span><br><span class="line">    -e SELF_SIGNED_CERT="true" \</span><br><span class="line">    -e REGISTRY_AUTH="myuser:sickpassword" \</span><br><span class="line">    mortensrasmussen/docker-registry-manifest-cleanup:1.1.1</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<blockquote>
+<p>若使用上面命令执行报错找不到目录的错误可切换<code>docker-registry-manifest-cleanup</code>的版本至1.0.5进行尝试</p>
+</blockquote>
+<ul>
+<li>使用docker-registry-manifest-cleanup 1.0.5进行存储回收。<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 由于以前的版本不支持提权，故将 /etc/registry/config.yml 中的鉴权配置部分先暂时注释掉，重启registry容器</span></span><br><span class="line">    # auth:</span><br><span class="line">      # token:</span><br><span class="line">        # issuer: harbor-token-issuer</span><br><span class="line">        # realm: https://registry.example.com/service/token</span><br><span class="line">        # rootcertbundle: /etc/registry/root.crt</span><br><span class="line">        # service: harbor-registry</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 执行以下脚本尝试通过api模拟删除manifests</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> docker run -it --rm \</span></span><br><span class="line">    -v /home/someuser/registry:/registry \</span><br><span class="line">    -e REGISTRY_URL=https://registry.example.com \</span><br><span class="line">    -e CURL_INSECURE=true \</span><br><span class="line">    -e DRY_RUN=true \</span><br><span class="line">    mortensrasmussen/docker-registry-manifest-cleanup:1.0.5</span><br><span class="line">    </span><br><span class="line"><span class="meta">#</span><span class="bash"> 如上一步没有报错，执行以下脚本，真正删除</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> docker run -it --rm \</span></span><br><span class="line">    -v /home/someuser/registry:/registry \</span><br><span class="line">    -e REGISTRY_URL=https://registry.example.com \</span><br><span class="line">    -e CURL_INSECURE=true \</span><br><span class="line">    mortensrasmussen/docker-registry-manifest-cleanup:1.0.5</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 执行完成后将授权配置改回来，取消注释</span></span><br><span class="line">    auth:</span><br><span class="line">      token:</span><br><span class="line">        issuer: harbor-token-issuer</span><br><span class="line">        realm: https://registry.example.com/service/token</span><br><span class="line">        rootcertbundle: /etc/registry/root.crt</span><br><span class="line">        service: harbor-registry</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="参考文档："><a href="#参考文档：" class="headerlink" title="参考文档："></a>参考文档：</h3><ul>
+<li><a href="https://github.com/vmware/harbor/blob/master/docs/user_guide.md#deleting-repositories" target="_blank" rel="noopener">https://github.com/vmware/harbor/blob/master/docs/user_guide.md#deleting-repositories</a></li>
+<li><a href="https://github.com/mortensteenrasmussen/docker-registry-manifest-cleanup" target="_blank" rel="noopener">https://github.com/mortensteenrasmussen/docker-registry-manifest-cleanup</a></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/images/config/wechat_subscriber.png" alt="setzero wechat" style="width: 200px; max-width: 100%;">
+  <div></div>
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/harbor/" rel="tag"># harbor</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/18/阿里云使用弹性公网IP-VPC集群可以正常访问公网/" rel="next" title="阿里云使用弹性公网IP,VPC集群可以正常访问公网">
+                <i class="fa fa-chevron-left"></i> 阿里云使用弹性公网IP,VPC集群可以正常访问公网
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/21/kubernetes调度器/" rel="prev" title="kubernetes调度器">
+                kubernetes调度器 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">setzero</p>
+              <div class="site-description motion-element" itemprop="description">回首向来萧瑟处，归去，也无风雨也无晴。</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/TimeBye" title="GitHub &rarr; https://github.com/TimeBye" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://weibo.com/u/2153362077" title="Weibo &rarr; http://weibo.com/u/2153362077" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Harbor简介"><span class="nav-number">1.</span> <span class="nav-text">Harbor简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Harbor存储回收"><span class="nav-number">2.</span> <span class="nav-text">Harbor存储回收</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用harbor-cleaner进行软删除"><span class="nav-number">3.</span> <span class="nav-text">使用harbor-cleaner进行软删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#存储回收"><span class="nav-number">4.</span> <span class="nav-text">存储回收</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Harbor-v1-7-0及以上版本"><span class="nav-number">4.1.</span> <span class="nav-text">Harbor v1.7.0及以上版本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Harbor-1-7-0以前版本"><span class="nav-number">4.2.</span> <span class="nav-text">Harbor 1.7.0以前版本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不理想的地方"><span class="nav-number">4.3.</span> <span class="nav-text">不理想的地方</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文档："><span class="nav-number">5.</span> <span class="nav-text">参考文档：</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">setzero</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.1"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: true,
+    appId: 'XtdzaNNhj3QzwpLfEPRyPB4f-gzGzoHsz',
+    appKey: 'PVBOEPyETkedTsomHnvrpC63',
+    placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn'
+  });
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $('.leancloud_visitors');
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            
+            Counter('put', '/classes/Counter/' + counter.objectId, JSON.stringify({ time: { '__op': 'Increment', 'amount': 1 } }))
+            
+              .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+              })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! More info at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .fail(function ({ responseJSON }) {
+          console.log('LeanCloud Counter Error: ' + responseJSON.code + ' ' + responseJSON.error);
+        });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + 'XtdzaNNhj3QzwpLfEPRyPB4f-gzGzoHsz')
+        .done(function({ api_server }) {
+          var Counter = function(method, url, data) {
+            return $.ajax({
+              method: method,
+              url: 'https://' + api_server + '/1.1' + url,
+              headers: {
+                'X-LC-Id': 'XtdzaNNhj3QzwpLfEPRyPB4f-gzGzoHsz',
+                'X-LC-Key': 'PVBOEPyETkedTsomHnvrpC63',
+                'Content-Type': 'application/json',
+              },
+              data: data
+            });
+          };
+          
+            addCount(Counter);
+          
+        });
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

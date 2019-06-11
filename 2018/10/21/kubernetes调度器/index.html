@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<!--
+                           _ooOoo_
+                          o8888888o
+                          88" . "88
+                          (| -_- |)
+                          O\  =  /O
+                       ____/`---'\____
+                     .'  \\|     |//  `.
+                    /  \\|||  :  |||//  \
+                   /  _||||| -:- |||||-  \
+                   |   | \\\  -  /// |   |
+                   | \_|  ''\---/''  |   |
+                   \  .-\__  `-`  ___/-. /
+                 ___`. .'  /--.--\  `. . __
+              ."" '<  `.___\_<|>_/___.'  >'"".
+             | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+             \  \ `-.   \_ __\ /__ _/   .-` /  /
+        ======`-.____`-.___\_____/___.-`____.-'======
+                           `=---='
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                 佛祖保佑       永无BUG  By:- timebye.github.io
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Kubernetes SchedulingKubernetes作为一个容器编排调度引擎，资源调度是它的最基本也是最重要的功能。当我们部署一个应用时它运行在哪个节点？这个节点满不满足我们的运行要求？Kubernetes又是如何进行资源调度的呢？今天将通过本文带你了解到以下信息：  了解资源请求及限制对pod调度的影响 查看调度事件events 了解label选择器对pod调度的影响 了解节点亲和性和">
+<meta name="keywords" content="kubernetes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kubernetes调度器">
+<meta property="og:url" content="https://timebye.github.io/2018/10/21/kubernetes调度器/index.html">
+<meta property="og:site_name" content="拾穗">
+<meta property="og:description" content="Kubernetes SchedulingKubernetes作为一个容器编排调度引擎，资源调度是它的最基本也是最重要的功能。当我们部署一个应用时它运行在哪个节点？这个节点满不满足我们的运行要求？Kubernetes又是如何进行资源调度的呢？今天将通过本文带你了解到以下信息：  了解资源请求及限制对pod调度的影响 查看调度事件events 了解label选择器对pod调度的影响 了解节点亲和性和">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://timebye.github.io/images/2018-10-21-kubernetes%E8%B0%83%E5%BA%A6%E5%99%A8/2019-06-11-20-21-40.png">
+<meta property="og:updated_time" content="2019-06-11T12:28:58.818Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kubernetes调度器">
+<meta name="twitter:description" content="Kubernetes SchedulingKubernetes作为一个容器编排调度引擎，资源调度是它的最基本也是最重要的功能。当我们部署一个应用时它运行在哪个节点？这个节点满不满足我们的运行要求？Kubernetes又是如何进行资源调度的呢？今天将通过本文带你了解到以下信息：  了解资源请求及限制对pod调度的影响 查看调度事件events 了解label选择器对pod调度的影响 了解节点亲和性和">
+<meta name="twitter:image" content="https://timebye.github.io/images/2018-10-21-kubernetes%E8%B0%83%E5%BA%A6%E5%99%A8/2019-06-11-20-21-40.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://timebye.github.io/2018/10/21/kubernetes调度器/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>kubernetes调度器 | 拾穗</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <script src="/js/hexo_resize_image.js"></script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拾穗</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+
+  
+
+  <a href="https://github.com/timebye" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://timebye.github.io/2018/10/21/kubernetes调度器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="setzero">
+      <meta itemprop="description" content="回首向来萧瑟处，归去，也无风雨也无晴。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾穗">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kubernetes调度器
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-10-21 20:20:10" itemprop="dateCreated datePublished" datetime="2018-10-21T20:20:10+08:00">2018-10-21</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/kubernetes集群/" itemprop="url" rel="index"><span itemprop="name">kubernetes集群</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2018/10/21/kubernetes调度器/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/10/21/kubernetes调度器/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+            <span id="/2018/10/21/kubernetes调度器/" class="leancloud_visitors" data-flag-title="kubernetes调度器">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读次数：</span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="Kubernetes-Scheduling"><a href="#Kubernetes-Scheduling" class="headerlink" title="Kubernetes Scheduling"></a>Kubernetes Scheduling</h3><p>Kubernetes作为一个容器编排调度引擎，资源调度是它的最基本也是最重要的功能。当我们部署一个应用时它运行在哪个节点？这个节点满不满足我们的运行要求？Kubernetes又是如何进行资源调度的呢？今天将通过本文带你了解到以下信息：</p>
+<ul>
+<li>了解资源请求及限制对pod调度的影响</li>
+<li>查看调度事件events</li>
+<li>了解label选择器对pod调度的影响</li>
+<li>了解节点亲和性和Pod亲和性对调度的影响</li>
+<li>不使用调度器， 手动调度一个pod</li>
+<li>了解Daemonset的角色</li>
+<li>了解如何配置kubernetes scheduler</li>
+</ul>
+<a id="more"></a>
+
+<p>在Kubernetes中有一个kube-scheduler组件，该组件运行在master节点上，它主要负责pod的调度。kube-scheduler监听kube-apiserver中是否有还未调度到node上的pod（即Spec.NodeName为空的Pod），再通过特定的算法为pod指定分派node运行。如果分配失败，则将该pod放置调度队列尾部以重新调度。调度主要分为几个部分：首先是预选过程，过滤不满足Pod要求的节点。然后是优选过程，对通过要求的节点进行优先级排序，最后选择优先级最高的节点分配。其中涉及到的两个关键点是过滤和优先级评定的算法。调度器使用一组规则过滤不符合要求的节点，其中包括设置了资源的request和指定了Nodename或者其他亲和性设置等等。优先级评定将过滤得到的节点列表进行打分，调度器考虑一些整体的优化策略，比如将Deployment控制的多个副本集分配到不同节点上等等。</p>
+<p><img src="/images/2018-10-21-kubernetes%E8%B0%83%E5%BA%A6%E5%99%A8/2019-06-11-20-21-40.png" alt></p>
+<h4 id="资源请求及限制对pod调度的影响"><a href="#资源请求及限制对pod调度的影响" class="headerlink" title="资源请求及限制对pod调度的影响"></a>资源请求及限制对pod调度的影响</h4><p>在部署应用时，我们会考虑到使这个应用运行起来需要多少的内存和CPU资源的使用量，这样才能判断应将他运行在哪个节点上。在部署文件resource属性中添加requests字段用于说明运行该容器所需的最少资源，当调度器开始调度该Pod时，调度程序确保对于每种资源类型，计划容器的资源请求总和必须小于节点的容量才能分配该节点运行Pod，resource属性中添加limits字段用于限制容器运行时所获得的最大资源。如果该容器超出其内存限制，则可能被终止。 如果该容器可以重新启动，kubelet会将它从新启动。如果调度器找不到合适的节点运行Pod时，就会产生调度失败事件，调度器会将Pod放置调度队列以循环调度，直到调度完成。</p>
+<p>在下面例子中，运行一个nginx Pod，资源请求了256Mi的内存和100m的CPU，调度器将判断哪个节点还剩余这么多的资源，寻找到了之后就会将这个Pod调度上去。同时也设置了512Mi的内存和300m的CPU的使用限制，如果该Pod运行之后超出了这一限制就将被重启甚至被驱逐。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">    resources:</span></span><br><span class="line"><span class="attr">      requests:</span></span><br><span class="line"><span class="attr">        memory:</span> <span class="string">"256Mi"</span></span><br><span class="line"><span class="attr">        cpu:</span> <span class="string">"100m"</span></span><br><span class="line"><span class="attr">      limits:</span></span><br><span class="line"><span class="attr">        memory:</span> <span class="string">"512Mi"</span></span><br><span class="line"><span class="attr">        cpu:</span> <span class="string">"300m"</span></span><br></pre></td></tr></table></figure>
+
+<p>参考文档：</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/" target="_blank" rel="noopener">Assign CPU Resources to Containers and Pods</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/" target="_blank" rel="noopener">Assign Memory Resources to Containers and Pods</a></li>
+</ul>
+<h4 id="查看调度事件events"><a href="#查看调度事件events" class="headerlink" title="查看调度事件events"></a>查看调度事件events</h4><p>在部署应用后，可以使用<code>kubectl describe</code>命令进行查看Pod的调度事件，下面是一个coredns被成功调度到node3运行的事件记录。</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl describe po coredns-5679d9cd77-d6jp6 -n kube-system</span></span><br><span class="line">...</span><br><span class="line">Events:</span><br><span class="line">  Type    Reason     Age   From               Message</span><br><span class="line">  ----    ------     ----  ----               -------</span><br><span class="line">  Normal  Scheduled  29s   default-scheduler  Successfully assigned kube-system/coredns-5679d9cd77-d6jp6 to node3</span><br><span class="line">  Normal  Pulled     28s   kubelet, node3     Container image "grc.io/kubernetes/coredns:1.2.2" already present on machine</span><br><span class="line">  Normal  Created    28s   kubelet, node3     Created container</span><br><span class="line">  Normal  Started    28s   kubelet, node3     Started container</span><br></pre></td></tr></table></figure>
+
+<p>下面是一个coredns被调度失败的事件记录，根据记录显示不可调度的原因是没有节点满足该Pod的内存请求。</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl describe po coredns-8447874846-5hpmz -n kube-system</span></span><br><span class="line">...</span><br><span class="line">Events:</span><br><span class="line">  Type     Reason            Age                From               Message</span><br><span class="line">  ----     ------            ----               ----               -------</span><br><span class="line">  Warning  FailedScheduling  22s (x3 over 24s)  default-scheduler  0/3 nodes are available: 3 Insufficient memory.</span><br></pre></td></tr></table></figure>
+
+<h4 id="label选择器对pod调度的影响"><a href="#label选择器对pod调度的影响" class="headerlink" title="label选择器对pod调度的影响"></a>label选择器对pod调度的影响</h4><p>例如我们需要部署一个ES集群，由于ES对磁盘有较高的要求，而集群中只有一部分节点有SSD磁盘，那么我们就需要将标记一下带有SSD磁盘的节点即给这些节点打上Lable，让ES的pod只能运行在带这些标记的节点上。<br>Lable是附着在K8S对象（如Pod、Service等）上的键值对。它可以在创建对象的时候指定，也可以在对象创建后随时指定。Kubernetes最终将对labels最终索引和反向索引用来优化查询和watch，在UI和命令行中会对它们排序。通俗的说，就是为K8S对象打上各种标签，方便选择和调度。</p>
+<ol>
+<li><p>查看节点信息</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl get nodes</span></span><br><span class="line">NAME    STATUS   ROLES            AGE    VERSION</span><br><span class="line">node1   Ready    etcd,master      128m   v1.12.4</span><br><span class="line">node2   Ready    etcd,lb,master   126m   v1.12.4</span><br><span class="line">node3   Ready    etcd,lb,worker   126m   v1.12.4</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>选择出有SSD磁盘的节点， 并给这个节点打上标记（label）</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl label nodes &lt;your-node-name&gt; disktype=ssd</span></span><br><span class="line">node/&lt;your-node-name&gt; labeled</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>验证节点上是否有成功打上对应label</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl get nodes --show-labels</span></span><br><span class="line">NAME    STATUS   ROLES            AGE    VERSION   LABELS</span><br><span class="line">node1   Ready    etcd,master      139m   v1.12.4   ...disktype=ssd,kubernetes.io/hostname=node1...</span><br><span class="line">node2   Ready    etcd,lb,master   137m   v1.12.4   ...kubernetes.io/hostname=node2...</span><br><span class="line">node3   Ready    etcd,lb,worker   137m   v1.12.4   ...kubernetes.io/hostname=node3...</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建一个ES的pod， 调度到有SSD磁盘标记的节点上<br>在pod的配置里， 要指定nodeSelector属性值为disktype：ssd。 这意味着pod启动后会调度到打上了disktype=ssd标签的node上</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">es</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">es</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">es</span></span><br><span class="line"><span class="attr">  nodeSelector:</span></span><br><span class="line"><span class="attr">    disktype:</span> <span class="string">ssd</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>验证pod启动后是否调度到指定节点上</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl get pods -o wide</span></span><br><span class="line">NAMESPACE  NAME                   READY   STATUS    RESTARTS   AGE    IP              NODE    NOMINATED NODE</span><br><span class="line">default    es-5679d9cd77-sbmcx    1/1     Running   0          134m   10.244.2.3      node1   &lt;none&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ul>
+<li>参考文档 <a href="https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes/" target="_blank" rel="noopener">Assign Pods to Nodes</a></li>
+</ul>
+<h4 id="节点亲和性和Pod亲和性对调度的影响"><a href="#节点亲和性和Pod亲和性对调度的影响" class="headerlink" title="节点亲和性和Pod亲和性对调度的影响"></a>节点亲和性和Pod亲和性对调度的影响</h4><p>上小节讲述的nodeSelector提供了一种非常简单的方法，可以将pod限制为具有特定标签的节点。而更为强大的表达约束类型则可以由Affinity和Anti-affinity来配置。即亲和性与反亲和性的设置。亲和性和反亲和性包括两种类型：节点（反）亲和性与Pod（反）亲和性。Node affinity与NodeSelector很相似，它允许你根据节点上的标签限制你的pod可以在哪些节点上进行调度。目前有两种类型的节点关联，称为requiredDuringSchedulingIgnoredDuringExecution和 preferredDuringSchedulingIgnoredDuringExecution。可以将它们分别视为“硬规则”和“软规则”，前者指定了要将 pod调度到节点上必须满足的规则，而后者指定调度程序将尝试强制但不保证的首选项。名称中的“IgnoredDuringExecution”部分意味着，类似于nodeSelector工作方式，如果节点上的标签在运行时更改，不再满足pod上的关联性规则，pod仍将继续在该节点上运行。Pod affinity强调的是同一个节点中Pod之间的亲和力。可以根据已在节点上运行的pod上的标签来约束pod可以调度哪些节点上。比如希望运行该Pod到某个已经运行了Pod标签为app=webserver的节点上，就可以使用Pod affinity来表达这一需求。目前有两种类型Pod亲和力和反亲和力，称为requiredDuringSchedulingIgnoredDuringExecution以及 preferredDuringSchedulingIgnoredDuringExecution，其中表示“硬规则”与“软规则”的要求。类似于Node affinity，IgnoredDuringExecution部分表示如果在Pod运行期间改变了Pod标签导致亲和性不满足以上规则，则pod仍将继续在该节点上运行。无论是Selector还是Affinity，都是基于Pod或者Node的标签来表达约束类型。从而让调度器按照约束规则来调度Pod运行在合理的节点上。<br>节点亲和性如下所示，其中亲和性定义为：该pod只能放置在一个含有键为kubernetes.io/hostname并且值为node1或者node2标签的节点上。此外，在满足该标准的节点中，具有其键为app且值为webserver的标签的节点应该是优选的。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">with-node-affinity</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  affinity:</span></span><br><span class="line"><span class="attr">    nodeAffinity:</span></span><br><span class="line"><span class="attr">      requiredDuringSchedulingIgnoredDuringExecution:</span></span><br><span class="line"><span class="attr">        nodeSelectorTerms:</span></span><br><span class="line"><span class="attr">        - matchExpressions:</span></span><br><span class="line"><span class="attr">          - key:</span> <span class="string">kubernetes.io/hostname</span></span><br><span class="line"><span class="attr">            operator:</span> <span class="string">In</span></span><br><span class="line"><span class="attr">            values:</span></span><br><span class="line"><span class="bullet">            -</span> <span class="string">node1</span></span><br><span class="line"><span class="bullet">            -</span> <span class="string">node2</span></span><br><span class="line"><span class="attr">      preferredDuringSchedulingIgnoredDuringExecution:</span></span><br><span class="line"><span class="attr">      - weight:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">        preference:</span></span><br><span class="line"><span class="attr">          matchExpressions:</span></span><br><span class="line"><span class="attr">          - key:</span> <span class="string">app</span></span><br><span class="line"><span class="attr">            operator:</span> <span class="string">In</span></span><br><span class="line"><span class="attr">            values:</span></span><br><span class="line"><span class="bullet">            -</span> <span class="string">webserver</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">with-node-affinity</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">k8s.gcr.io/pause:2.0</span></span><br></pre></td></tr></table></figure>
+
+<p>Pod反亲和性如下所示，其中反亲和性定义为：在此拓扑域（相当于以topologyKey的值进行的节点分组）中，命名空间为default下有标签键为app，标签值为redis的Pod时不在此Node上运行。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">with-node-affinity</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  affinity:</span></span><br><span class="line"><span class="attr">    podAntiAffinity:</span></span><br><span class="line"><span class="attr">      requiredDuringSchedulingIgnoredDuringExecution:</span></span><br><span class="line"><span class="attr">      - labelSelector:</span></span><br><span class="line"><span class="attr">          matchExpressions:</span></span><br><span class="line"><span class="attr">          - key:</span> <span class="string">app</span></span><br><span class="line"><span class="attr">            operator:</span> <span class="string">In</span></span><br><span class="line"><span class="attr">            values:</span></span><br><span class="line"><span class="bullet">            -</span> <span class="string">redis</span></span><br><span class="line"><span class="attr">        namespaces:</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">default</span></span><br><span class="line"><span class="attr">        topologyKey:</span> <span class="string">kubernetes.io/hostname</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">with-node-affinity</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">k8s.gcr.io/pause:2.0</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="不使用调度器，-手动调度一个pod"><a href="#不使用调度器，-手动调度一个pod" class="headerlink" title="不使用调度器， 手动调度一个pod"></a>不使用调度器， 手动调度一个pod</h4><p>Scheduling过程的本质其实就是给Pod赋予nodeName属性合适的值。那么在我们进行Pod部署时就直接指定这个值是否可行呢？答案是肯定的。如下配置，将nginx直接分配到node1上运行。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">  - image:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">  nodeName:</span> <span class="string">node1</span></span><br></pre></td></tr></table></figure>
+
+<p>还有一种指定节点的部署方式——static pod，就像它名称一样，他是一个“静态”的Pod，它不通过apiserver，直接由kubelet进行托管。在kubelet的启动参数中<code>--pod-manifest-path=DIR</code>，这里的<code>DIR</code>就是放置static pod的编排文件的目录。把static pod的编排文件放到此目录下，kubelet就可以监听到变化，并根据编排文件创建pod。还有一个启动参数<code>--manifest-url=URL</code>，kubelet会从这个URL下载编排文件，并创建pod。static pod有一个特性是我们使用docker或kubectl删除static pod后， static pod还能被kubelet进程拉起。通过这种方式保证了应用的可用性。有点相当于systemd的功能， 但比systemd好的一点是， static pod的镜像信息会在apiserver中注册。 这样的话， 我们就可以统一对部署信息进行可视化管理。 此外static pod是容器， 无需拷贝二进制文件到主机上， 应用封装在镜像里也保证了环境的一致性， 无论是应用的编排文件还是应用的镜像都方便进行版本管理和分发。<br>在使用kubeadm部署kubernetes集群时， static pod得到了大量的应用，比如etcd、 kube-scheduler,  kube-controller-manager,  kube-apiserver等都是使用 static pod的方式运行的。<br>使用static pod部署出来的pod名称与其他pod有很大的不同点，名称中没有“乱码”，只是简单的将pod的name属性值与它运行在的node的name属性值相连接而成。如下所示，coredns是通过Deployment部署出来的名称中就有部分“乱码”，而etcd，kube-apiserver这种Pod就是static pod。</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"> $</span><span class="bash"> kubectl get po --all-namespaces</span></span><br><span class="line">NAMESPACE     NAME                            READY   STATUS    RESTARTS   AGE</span><br><span class="line">kube-system   coredns-5679d9cd77-d6jp6        1/1     Running   0          6m59s</span><br><span class="line">kube-system   etcd-node1                      1/1     Running   0          6m58s</span><br><span class="line">kube-system   etcd-node2                      1/1     Running   0          6m58s</span><br><span class="line">kube-system   etcd-node3                      1/1     Running   0          6m54s</span><br><span class="line">kube-system   kube-proxy-nxj5d                1/1     Running   0          6m52s</span><br><span class="line">kube-system   kube-proxy-tz264                1/1     Running   0          6m56s</span><br><span class="line">kube-system   kube-proxy-zxgxc                1/1     Running   0          6m53s</span><br></pre></td></tr></table></figure>
+
+<h4 id="了解Daemonset角色"><a href="#了解Daemonset角色" class="headerlink" title="了解Daemonset角色"></a>了解Daemonset角色</h4><p>DaemonSet是一种控制器，它确保在一些或全部Node上都运行一个指定的Pod。这些Pod就相当于守护进程一样不期望被终止。当有Node加入集群时，也会为他们新增一个Pod。当有Node从集群移除时，对应的Pod也会被回收。当删除DaemonSet时将会删除它创建的所有Pod。一般情况下，Pod运行在哪个节点上是由Kubernates调度器选择的。但是在Kubernates 1.11版本之前由DaemonSet Controller创建的Pod在创建时已经确定了在哪个节点上运行（pod在创建的时候.spec.nodeName字段就指定了， 因此会被scheduler忽略），所以即使调度器没有启动DaemonSet Controller创建的Pod仍然也可以被分配node。直到Kubernates  1.11版本，DaemonSet的pod由scheduler调度才作为alpha特性引入。在上小节中<code>kube-proxy</code>就是以DaemonSet的方式进行运行的。</p>
+<h4 id="配置Kubernetes-scheduler"><a href="#配置Kubernetes-scheduler" class="headerlink" title="配置Kubernetes scheduler"></a>配置Kubernetes scheduler</h4><p>如果需要配置一些高级的调度策略以满足我们的需要，可以修改默认调度程序的配置文件。kube-scheduler在启动的时候可以通过–policy-config-file参数来指定调度策略文件，我们可以根据我们自己的需要来组装Predicates和Priority函数。选择不同的过滤函数和优先级函数。调整控制优先级函数的权重和过滤函数的顺序都会影响调度结果。<br>官方的Policy文件如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">Policy</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">predicates:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">&#123;name:</span> <span class="string">PodFitsHostPorts&#125;</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">&#123;name:</span> <span class="string">PodFitsResources&#125;</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">&#123;name:</span> <span class="string">NoDiskConflict&#125;</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">&#123;name:</span> <span class="string">NoVolumeZoneConflict&#125;</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">&#123;name:</span> <span class="string">MatchNodeSelector&#125;</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">&#123;name:</span> <span class="string">HostName&#125;</span></span><br><span class="line"><span class="attr">priorities:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">&#123;name:</span> <span class="string">LeastRequestedPriority,</span> <span class="attr">weight:</span> <span class="number">1</span><span class="string">&#125;</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">&#123;name:</span> <span class="string">BalancedResourceAllocation,</span> <span class="attr">weight:</span> <span class="number">1</span><span class="string">&#125;</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">&#123;name:</span> <span class="string">ServiceSpreadingPriority,</span> <span class="attr">weight:</span> <span class="number">1</span><span class="string">&#125;</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">&#123;name:</span> <span class="string">EqualPriority,</span> <span class="attr">weight:</span> <span class="number">1</span><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中predicates区域是调度的预选阶段所需要的过滤算法。priorities区域是优选阶段的评分算法。</p>
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><p>我们再来回顾一下调度的主要构成部分：首先是预选过程，过滤掉不满足Pod要求的节点，然后是优选过程，对通过要求的节点进行优先级排序，最后选择优先级最高的节点进行分配。当调度器不工作时或有临时需求可以手动指定nodeName属性的值，让其不通过调度器进行调度直接运行在指定的节点上。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/images/config/wechat_subscriber.png" alt="setzero wechat" style="width: 200px; max-width: 100%;">
+  <div></div>
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/21/Harbor存储回收/" rel="next" title="Harbor存储回收">
+                <i class="fa fa-chevron-left"></i> Harbor存储回收
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/08/ls等io操作卡死处理办法/" rel="prev" title="ls等io操作卡死处理办法">
+                ls等io操作卡死处理办法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">setzero</p>
+              <div class="site-description motion-element" itemprop="description">回首向来萧瑟处，归去，也无风雨也无晴。</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/TimeBye" title="GitHub &rarr; https://github.com/TimeBye" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://weibo.com/u/2153362077" title="Weibo &rarr; http://weibo.com/u/2153362077" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Kubernetes-Scheduling"><span class="nav-number">1.</span> <span class="nav-text">Kubernetes Scheduling</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#资源请求及限制对pod调度的影响"><span class="nav-number">1.1.</span> <span class="nav-text">资源请求及限制对pod调度的影响</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看调度事件events"><span class="nav-number">1.2.</span> <span class="nav-text">查看调度事件events</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#label选择器对pod调度的影响"><span class="nav-number">1.3.</span> <span class="nav-text">label选择器对pod调度的影响</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#节点亲和性和Pod亲和性对调度的影响"><span class="nav-number">1.4.</span> <span class="nav-text">节点亲和性和Pod亲和性对调度的影响</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不使用调度器，-手动调度一个pod"><span class="nav-number">1.5.</span> <span class="nav-text">不使用调度器， 手动调度一个pod</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#了解Daemonset角色"><span class="nav-number">1.6.</span> <span class="nav-text">了解Daemonset角色</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置Kubernetes-scheduler"><span class="nav-number">1.7.</span> <span class="nav-text">配置Kubernetes scheduler</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结："><span class="nav-number">2.</span> <span class="nav-text">总结：</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">setzero</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.1"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: true,
+    appId: 'XtdzaNNhj3QzwpLfEPRyPB4f-gzGzoHsz',
+    appKey: 'PVBOEPyETkedTsomHnvrpC63',
+    placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn'
+  });
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $('.leancloud_visitors');
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            
+            Counter('put', '/classes/Counter/' + counter.objectId, JSON.stringify({ time: { '__op': 'Increment', 'amount': 1 } }))
+            
+              .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+              })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! More info at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .fail(function ({ responseJSON }) {
+          console.log('LeanCloud Counter Error: ' + responseJSON.code + ' ' + responseJSON.error);
+        });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + 'XtdzaNNhj3QzwpLfEPRyPB4f-gzGzoHsz')
+        .done(function({ api_server }) {
+          var Counter = function(method, url, data) {
+            return $.ajax({
+              method: method,
+              url: 'https://' + api_server + '/1.1' + url,
+              headers: {
+                'X-LC-Id': 'XtdzaNNhj3QzwpLfEPRyPB4f-gzGzoHsz',
+                'X-LC-Key': 'PVBOEPyETkedTsomHnvrpC63',
+                'Content-Type': 'application/json',
+              },
+              data: data
+            });
+          };
+          
+            addCount(Counter);
+          
+        });
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<!--
+                           _ooOoo_
+                          o8888888o
+                          88" . "88
+                          (| -_- |)
+                          O\  =  /O
+                       ____/`---'\____
+                     .'  \\|     |//  `.
+                    /  \\|||  :  |||//  \
+                   /  _||||| -:- |||||-  \
+                   |   | \\\  -  /// |   |
+                   | \_|  ''\---/''  |   |
+                   \  .-\__  `-`  ___/-. /
+                 ___`. .'  /--.--\  `. . __
+              ."" '<  `.___\_<|>_/___.'  >'"".
+             | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+             \  \ `-.   \_ __\ /__ _/   .-` /  /
+        ======`-.____`-.___\_____/___.-`____.-'======
+                           `=---='
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                 佛祖保佑       永无BUG  By:- timebye.github.io
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本文基于使用kubeadm搭建的kubernetes集群进行讲解">
+<meta name="keywords" content="kubernetes,cert">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kubernetes全新签发证书">
+<meta property="og:url" content="https://timebye.github.io/2018/12/25/kubernetes全新签发证书/index.html">
+<meta property="og:site_name" content="拾穗">
+<meta property="og:description" content="本文基于使用kubeadm搭建的kubernetes集群进行讲解">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-06-11T12:46:48.425Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kubernetes全新签发证书">
+<meta name="twitter:description" content="本文基于使用kubeadm搭建的kubernetes集群进行讲解">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://timebye.github.io/2018/12/25/kubernetes全新签发证书/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>kubernetes全新签发证书 | 拾穗</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <script src="/js/hexo_resize_image.js"></script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拾穗</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+
+  
+
+  <a href="https://github.com/timebye" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://timebye.github.io/2018/12/25/kubernetes全新签发证书/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="setzero">
+      <meta itemprop="description" content="回首向来萧瑟处，归去，也无风雨也无晴。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾穗">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kubernetes全新签发证书
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-12-25 20:33:33" itemprop="dateCreated datePublished" datetime="2018-12-25T20:33:33+08:00">2018-12-25</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/kubernetes集群/" itemprop="url" rel="index"><span itemprop="name">kubernetes集群</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2018/12/25/kubernetes全新签发证书/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/12/25/kubernetes全新签发证书/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+            <span id="/2018/12/25/kubernetes全新签发证书/" class="leancloud_visitors" data-flag-title="kubernetes全新签发证书">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读次数：</span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文基于使用kubeadm搭建的kubernetes集群进行讲解</p>
+<a id="more"></a>
+
+<h3 id="第一步：获取证书签发信息"><a href="#第一步：获取证书签发信息" class="headerlink" title="第一步：获取证书签发信息"></a>第一步：获取证书签发信息</h3><h4 id="方式一：通过原有证书进行获取相关信息"><a href="#方式一：通过原有证书进行获取相关信息" class="headerlink" title="方式一：通过原有证书进行获取相关信息"></a>方式一：通过原有证书进行获取相关信息</h4><ul>
+<li><p>获取apiserver签发信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver.crt</span><br><span class="line">......</span><br><span class="line">X509v3 extensions:</span><br><span class="line">    X509v3 Key Usage: critical</span><br><span class="line">        Digital Signature, Key Encipherment</span><br><span class="line">    X509v3 Extended Key Usage:</span><br><span class="line">        TLS Web Server Authentication</span><br><span class="line">    X509v3 Subject Alternative Name:</span><br><span class="line">        DNS:localhost, DNS:node1, DNS:node2, DNS:node3, DNS:kubernetes, DNS:kubernetes.default, DNS:kubernetes.default.svc,   DNS:kubernetes.default.svc.cluster.local, IP Address:127.0.0.1, IP Address:10.96.0.1, IP Address:192.168.12.10, IP   Address:192.168.12.11, IP Address:192.168.12.12, IP Address:192.168.12.13</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li><p>从上面输出信息可知签发的DNS和IP详情</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">DNS.1</span> = localhost</span><br><span class="line"><span class="comment"># 各 master 节点 nodeName</span></span><br><span class="line"><span class="attr">DNS.2</span> = node1</span><br><span class="line"><span class="attr">DNS.3</span> = node2</span><br><span class="line"><span class="attr">DNS.4</span> = node3</span><br><span class="line"><span class="comment"># kubenertes svc 地址</span></span><br><span class="line"><span class="attr">DNS.5</span> = kubernetes</span><br><span class="line"><span class="attr">DNS.6</span> = kubernetes.default</span><br><span class="line"><span class="attr">DNS.7</span> = kubernetes.default.svc</span><br><span class="line"><span class="comment"># 带 dns domain 的 kubenertes svc 地址</span></span><br><span class="line"><span class="attr">DNS.8</span> = kubernetes.default.svc.cluster.local</span><br><span class="line"><span class="attr">IP.6</span> = <span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line"><span class="comment"># kubenertes svc 的 clusterip</span></span><br><span class="line"><span class="attr">IP.5</span> = <span class="number">10.96</span>.<span class="number">0.1</span></span><br><span class="line"><span class="comment"># api-server VIP 地址</span></span><br><span class="line"><span class="attr">IP.4</span> = <span class="number">192.168</span>.<span class="number">12.10</span></span><br><span class="line"><span class="comment"># 各 master 节点 IP</span></span><br><span class="line"><span class="attr">IP.1</span> = <span class="number">192.168</span>.<span class="number">12.11</span></span><br><span class="line"><span class="attr">IP.2</span> = <span class="number">192.168</span>.<span class="number">12.12</span></span><br><span class="line"><span class="attr">IP.3</span> = <span class="number">192.168</span>.<span class="number">12.13</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="方式二：自行统计各项信息"><a href="#方式二：自行统计各项信息" class="headerlink" title="方式二：自行统计各项信息"></a>方式二：自行统计各项信息</h4><ul>
+<li><p>在创建证书之前需要获取到以下信息，在签发证书的时候会用到它：</p>
+<ul>
+<li>各master节点IP</li>
+<li>各master节点nodeName</li>
+<li>如果有设置apiserver负载均衡则需要VIP，否则请忽略</li>
+<li>kubernetes集群dns domain</li>
+<li>kubenertes.default.svc的clusterip</li>
+</ul>
+</li>
+<li><p>本文以下面集群信息为例：</p>
+<ul>
+<li><p>节点信息：</p>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>nodeName</strong></th>
+<th align="center"><strong>ip</strong></th>
+<th align="center"><strong>relo</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">slb</td>
+<td align="center">192.168.12.10</td>
+<td align="center">slb</td>
+</tr>
+<tr>
+<td align="center">node1</td>
+<td align="center">192.168.12.11</td>
+<td align="center">master</td>
+</tr>
+<tr>
+<td align="center">node2</td>
+<td align="center">192.168.12.12</td>
+<td align="center">master</td>
+</tr>
+<tr>
+<td align="center">node3</td>
+<td align="center">192.168.12.13</td>
+<td align="center">master</td>
+</tr>
+<tr>
+<td align="center">node4</td>
+<td align="center">192.168.12.14</td>
+<td align="center">worker</td>
+</tr>
+<tr>
+<td align="center">node5</td>
+<td align="center">192.168.12.15</td>
+<td align="center">worker</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>获取kubernetes dns domain：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># CoreDNS 查看方法</span></span><br><span class="line">$ kubectl get cm -n kube-system coredns -o yaml | grep kubernetes</span><br><span class="line">kubernetes cluster.local <span class="keyword">in</span>-addr.arpa ip6.arpa &#123;</span><br><span class="line"><span class="comment"># 由以上输出可知dns domain为 cluster.local</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># kube-dns 查看方法</span></span><br><span class="line">$ kubectl get deployment -n kube-system kube-dns -o yaml | grep domain</span><br><span class="line">- --domain=cluster.local.</span><br><span class="line"><span class="comment"># 由以上输出可知dns domain为 cluster.local</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>kubernetes apiserver clusterip</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get svc kubernetes -n default</span><br><span class="line">NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE</span><br><span class="line">kubernetes   ClusterIP   10.96.0.1      &lt;none&gt;        443/TCP   280d</span><br><span class="line"><span class="comment"># 由结果可知apiserver clusterip</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>同理获取etcd集群证书签发的DNS和IP详情，默认etcd证书路径为<code>/etc/kubernetes/pki/etcd</code></p>
+</blockquote>
+<h3 id="第二步：创建证书"><a href="#第二步：创建证书" class="headerlink" title="第二步：创建证书"></a>第二步：创建证书</h3><p><strong>Note:</strong> 我们只需要在一个节点上进行证书生成，生成的证书分发到其他节点即可</p>
+<h4 id="创建CA服务端证书签名请求配置文件openssl-conf"><a href="#创建CA服务端证书签名请求配置文件openssl-conf" class="headerlink" title="创建CA服务端证书签名请求配置文件openssl.conf"></a>创建CA服务端证书签名请求配置文件<code>openssl.conf</code></h4><ul>
+<li>内容如下，注意替换<code>alt_names_cluster</code>、<code>alt_names_etcd</code>域中的值<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">[ req ]</span><br><span class="line">default_bits = 2048</span><br><span class="line">default_md = sha256</span><br><span class="line">distinguished_name = req_distinguished_name</span><br><span class="line"></span><br><span class="line">[req_distinguished_name]</span><br><span class="line"></span><br><span class="line">[ v3_ca ]</span><br><span class="line">basicConstraints = critical, CA:TRUE</span><br><span class="line">keyUsage = critical, digitalSignature, keyEncipherment, keyCertSign</span><br><span class="line"></span><br><span class="line">[ v3_req_server ]</span><br><span class="line">basicConstraints = CA:FALSE</span><br><span class="line">keyUsage = critical, digitalSignature, keyEncipherment</span><br><span class="line">extendedKeyUsage = serverAuth</span><br><span class="line"></span><br><span class="line">[ v3_req_client ]</span><br><span class="line">basicConstraints = CA:FALSE</span><br><span class="line">keyUsage = critical, digitalSignature, keyEncipherment</span><br><span class="line">extendedKeyUsage = clientAuth</span><br><span class="line"></span><br><span class="line">[ v3_req_apiserver ]</span><br><span class="line">basicConstraints = CA:FALSE</span><br><span class="line">keyUsage = critical, digitalSignature, keyEncipherment</span><br><span class="line">extendedKeyUsage = serverAuth</span><br><span class="line">subjectAltName = @alt_names_cluster</span><br><span class="line"></span><br><span class="line">[ v3_req_etcd ]</span><br><span class="line">basicConstraints = CA:FALSE</span><br><span class="line">keyUsage = critical, digitalSignature, keyEncipherment</span><br><span class="line">extendedKeyUsage = serverAuth, clientAuth</span><br><span class="line">subjectAltName = @alt_names_etcd</span><br><span class="line"></span><br><span class="line">[ alt_names_cluster ]</span><br><span class="line">DNS.1 = localhost</span><br><span class="line">DNS.2 = node1</span><br><span class="line">DNS.3 = node2</span><br><span class="line">DNS.4 = node3</span><br><span class="line">DNS.5 = kubernetes</span><br><span class="line">DNS.6 = kubernetes.default</span><br><span class="line">DNS.7 = kubernetes.default.svc</span><br><span class="line">DNS.8 = kubernetes.default.svc.cluster.local</span><br><span class="line">IP.1 = 127.0.0.1</span><br><span class="line">IP.2 = 10.96.0.1</span><br><span class="line">IP.3 = 192.168.12.10</span><br><span class="line">IP.4 = 192.168.12.11</span><br><span class="line">IP.5 = 192.168.12.12</span><br><span class="line">IP.6 = 192.168.12.13</span><br><span class="line"></span><br><span class="line">[ alt_names_etcd ]</span><br><span class="line">DNS.1 = localhost</span><br><span class="line">DNS.2 = node1</span><br><span class="line">DNS.3 = node2</span><br><span class="line">DNS.4 = node3</span><br><span class="line">IP.1 = 127.0.0.1</span><br><span class="line">IP.2 = 0:0:0:0:0:0:0:1</span><br><span class="line">IP.3 = 192.168.12.11</span><br><span class="line">IP.4 = 192.168.12.12</span><br><span class="line">IP.5 = 192.168.12.13</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="创建集群-key-与-CA"><a href="#创建集群-key-与-CA" class="headerlink" title="创建集群 key 与 CA"></a>创建集群 key 与 CA</h4><ul>
+<li><p>将要创建的 CA</p>
+<table>
+<thead>
+<tr>
+<th><strong>路径</strong></th>
+<th><strong>Common Name</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ca.crt,key</td>
+<td>kubernetes</td>
+<td>Kubernetes general CA</td>
+</tr>
+<tr>
+<td>etcd/ca.crt,key</td>
+<td>kubernetes</td>
+<td>For all etcd-related functions</td>
+</tr>
+<tr>
+<td>front-proxy-ca.crt,key</td>
+<td>kubernetes</td>
+<td>For the front-end proxy</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>要注意 CA 中 CN(Common Name) 与 O(Organization) 等内容是会影响Kubernetes组件认证的</p>
+<ul>
+<li>CA (Certificate Authority) 是自签名的根证书，用来签名后续创建的其它证书</li>
+<li>CN (Common Name), apiserver 会从证书中提取该字段作为请求的用户名 (User Name)</li>
+<li>O (Organization), apiserver 会从证书中提取该字段作为请求用户所属的组 (Group)</li>
+</ul>
+<blockquote>
+<p>一般CA根证书有效期为10年，若距离过期时间还长，可跳过本节操作，命令中的<code>3650</code>为3650天，即证书有效期。</p>
+</blockquote>
+</li>
+<li><p>kubernetes-ca</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out ca.key 2048</span><br><span class="line">openssl req -x509 -new -nodes -key ca.key \</span><br><span class="line">  -subj &quot;/CN=kubernetes&quot; -config openssl.conf \</span><br><span class="line">  -extensions v3_ca -out ca.crt -days 3560</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>etcd-ca</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out etcd/ca.key 2048</span><br><span class="line">openssl req -x509 -new -nodes -key etcd/ca.key \</span><br><span class="line">  -subj &quot;/CN=kubernetes&quot; -config openssl.conf \</span><br><span class="line">  -extensions v3_ca -out etcd/ca.crt -days 3560</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>front-proxy-ca</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out front-proxy-ca.key 2048</span><br><span class="line">openssl req -x509 -new -nodes -key front-proxy-ca.key \</span><br><span class="line">  -subj &quot;/CN=kubernetes&quot; -config openssl.conf \</span><br><span class="line">  -extensions v3_ca -out front-proxy-ca.crt -days 3560</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="创建-Certificates"><a href="#创建-Certificates" class="headerlink" title="创建 Certificates"></a>创建 Certificates</h4><ul>
+<li><p>将要创建的 Certificates</p>
+<table>
+<thead>
+<tr>
+<th><strong>Name</strong></th>
+<th><strong>Key</strong></th>
+<th><strong>Certificates</strong></th>
+<th><strong>Common Name</strong></th>
+<th><strong>Organization</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>etcd/server</td>
+<td>etcd/server.key</td>
+<td>etcd/server.crt</td>
+<td>master</td>
+<td></td>
+</tr>
+<tr>
+<td>etcd/peer</td>
+<td>etcd/peer.key</td>
+<td>etcd/peer.crt</td>
+<td>master</td>
+<td></td>
+</tr>
+<tr>
+<td>etcd/healthcheck-client</td>
+<td>etcd/healthcheck-client.key</td>
+<td>etcd/healthcheck-client.crt</td>
+<td>kube-etcd-healthcheck-client</td>
+<td>system:masters</td>
+</tr>
+<tr>
+<td>apiserver-etcd-client</td>
+<td>apiserver-etcd-client.key</td>
+<td>apiserver-etcd-client.crt</td>
+<td>kube-apiserver-etcd-client</td>
+<td>system:masters</td>
+</tr>
+<tr>
+<td>apiserver</td>
+<td>apiserver.key</td>
+<td>apiserver.crt</td>
+<td>kube-apiserver</td>
+<td></td>
+</tr>
+<tr>
+<td>apiserver-kubelet-client</td>
+<td>apiserver-kubelet-client.key</td>
+<td>apiserver-kubelet-client.crt</td>
+<td>kube-apiserver-kubelet-client</td>
+<td>system:masters</td>
+</tr>
+<tr>
+<td>front-proxy-client</td>
+<td>front-proxy-client.key</td>
+<td>front-proxy-client.crt</td>
+<td>front-proxy-client</td>
+<td></td>
+</tr>
+<tr>
+<td>kube-scheduler</td>
+<td>kube-scheduler.key</td>
+<td>kube-scheduler.crt</td>
+<td>system:kube-scheduler</td>
+<td></td>
+</tr>
+<tr>
+<td>sa(kube-controller-manager)</td>
+<td>sa.key(sa.pub)</td>
+<td>kube-controller-manager.crt</td>
+<td>system:kube-controller-manager</td>
+<td></td>
+</tr>
+<tr>
+<td>admin(kubectl)</td>
+<td>admin.key</td>
+<td>admin.crt</td>
+<td>kubernetes-admin</td>
+<td>system:masters</td>
+</tr>
+<tr>
+<td>kubelet</td>
+<td>kubelet.key</td>
+<td>kubelet.crt</td>
+<td>system:node:master</td>
+<td>system:nodes</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>etcd/server</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out etcd/server.key 2048</span><br><span class="line">openssl req -new -key etcd/server.key \</span><br><span class="line">  -subj &quot;/CN=master&quot; -out etcd/server.csr</span><br><span class="line">openssl x509 -in etcd/server.csr -req -CA etcd/ca.crt \</span><br><span class="line">  -CAkey etcd/ca.key -CAcreateserial -extensions v3_req_etcd \</span><br><span class="line">  -extfile openssl.conf -out etcd/server.crt -days 3560</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>etcd/peer</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out etcd/peer.key 2048</span><br><span class="line">openssl req -new -key etcd/peer.key \</span><br><span class="line">  -subj &quot;/CN=master&quot; -out etcd/peer.csr</span><br><span class="line">openssl x509 -in etcd/peer.csr -req -CA etcd/ca.crt \</span><br><span class="line">  -CAkey etcd/ca.key -CAcreateserial -extensions v3_req_etcd \</span><br><span class="line">  -extfile openssl.conf -out etcd/peer.crt -days 3560</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li><p>etcd/healthcheck-client</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out etcd/healthcheck-client.key 2048</span><br><span class="line">openssl req -new -key etcd/healthcheck-client.key \</span><br><span class="line">  -subj &quot;/CN=kube-etcd-healthcheck-client/O=system:masters&quot; \</span><br><span class="line">  -out etcd/healthcheck-client.csr</span><br><span class="line">openssl x509 -in etcd/healthcheck-client.csr -req -CA etcd/ca.crt \</span><br><span class="line">  -CAkey etcd/ca.key -CAcreateserial -extensions v3_req_etcd \</span><br><span class="line">  -extfile openssl.conf -out etcd/healthcheck-client.crt -days 3560</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>apiserver-etcd-client</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out apiserver-etcd-client.key 2048</span><br><span class="line">openssl req -new -key apiserver-etcd-client.key \</span><br><span class="line">  -subj &quot;/CN=kube-apiserver-etcd-client/O=system:masters&quot; </span><br><span class="line">  -out apiserver-etcd-client.csr</span><br><span class="line">openssl x509 -in apiserver-etcd-client.csr -req -CA etcd/ca.crt \</span><br><span class="line">  -CAkey etcd/ca.key -CAcreateserial -extensions v3_req_etcd \</span><br><span class="line">  -extfile openssl.conf -out apiserver-etcd-client.crt -days 3560</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>apiserver</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out apiserver.key 2048</span><br><span class="line">openssl req -new -key apiserver.key \</span><br><span class="line">  -subj &quot;/CN=kube-apiserver&quot; -config openssl.conf \</span><br><span class="line">  -out apiserver.csr</span><br><span class="line">openssl x509 -req -in apiserver.csr -CA ca.crt -CAkey ca.key \</span><br><span class="line">  -CAcreateserial -extensions v3_req_apiserver \</span><br><span class="line">  -extfile openssl.conf -out apiserver.crt -days 3560</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>apiserver-kubelet-client</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out apiserver-kubelet-client.key 2048</span><br><span class="line">openssl req -new -key apiserver-kubelet-client.key \</span><br><span class="line">  -subj &quot;/CN=kube-apiserver-kubelet-client/O=system:masters&quot; \</span><br><span class="line">  -out apiserver-kubelet-client.csr</span><br><span class="line">openssl x509 -req -in apiserver-kubelet-client.csr -CA ca.crt -CAkey ca.key \</span><br><span class="line">  -CAcreateserial -extensions v3_req_client \</span><br><span class="line">  -extfile openssl.conf -out apiserver-kubelet-client.crt -days 3560</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>front-proxy-client</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out front-proxy-client.key 2048</span><br><span class="line">openssl req -new -key front-proxy-client.key \</span><br><span class="line">  -subj &quot;/CN=front-proxy-client&quot; \</span><br><span class="line">  -out front-proxy-client.csr</span><br><span class="line">openssl x509 -req -in front-proxy-client.csr -CA front-proxy-ca.crt -CAkey front-proxy-ca.key \</span><br><span class="line">  -CAcreateserial -extensions v3_req_client \</span><br><span class="line">  -extfile openssl.conf -out front-proxy-client.crt -days 3560</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>kube-scheduler</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out kube-scheduler.key 2048</span><br><span class="line">openssl req -new -key kube-scheduler.key \</span><br><span class="line">  -subj &quot;/CN=system:kube-scheduler&quot; \</span><br><span class="line">  -out kube-scheduler.csr</span><br><span class="line">openssl x509 -req -in kube-scheduler.csr -CA ca.crt -CAkey ca.key \</span><br><span class="line">  -CAcreateserial -extensions v3_req_client \</span><br><span class="line">  -extfile openssl.conf -out kube-scheduler.crt -days 3560</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>sa(kube-controller-manager)</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out sa.key 2048</span><br><span class="line">openssl rsa -in sa.key -pubout -out sa.pub</span><br><span class="line">openssl req -new -key sa.key \</span><br><span class="line">  -subj &quot;/CN=system:kube-controller-manager&quot; \</span><br><span class="line">  -out kube-controller-manager.csr</span><br><span class="line">openssl x509 -req -in kube-controller-manager.csr -CA ca.crt -CAkey ca.key \</span><br><span class="line">  -CAcreateserial -extensions v3_req_client \</span><br><span class="line">  -extfile openssl.conf -out kube-controller-manager.crt -days 3560</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>admin(kubectl)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out admin.key 2048</span><br><span class="line">openssl req -new -key admin.key \</span><br><span class="line">  -subj &quot;/CN=kubernetes-admin/O=system:masters&quot; \</span><br><span class="line">  -out admin.csr</span><br><span class="line">openssl x509 -req -in admin.csr -CA ca.crt -CAkey ca.key \</span><br><span class="line">  -CAcreateserial -extensions v3_req_client \</span><br><span class="line">  -extfile openssl.conf -out admin.crt -days 3560</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>kubelet</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out kubelet.key 2048</span><br><span class="line">openssl req -new -key kubelet.key \</span><br><span class="line">  -subj &quot;/CN=system:node:master/O=system:nodes&quot; \</span><br><span class="line">  -out kubelet.csr</span><br><span class="line">openssl x509 -req -in kubelet.csr -CA ca.crt -CAkey ca.key \</span><br><span class="line">  -CAcreateserial -extensions v3_req_client \</span><br><span class="line">  -extfile openssl.conf -out kubelet.crt -days 3560</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="第三步：生成kubernetes各组件配置文件并应用"><a href="#第三步：生成kubernetes各组件配置文件并应用" class="headerlink" title="第三步：生成kubernetes各组件配置文件并应用"></a>第三步：生成kubernetes各组件配置文件并应用</h3><h4 id="所要生成的配置文件列表"><a href="#所要生成的配置文件列表" class="headerlink" title="所要生成的配置文件列表"></a>所要生成的配置文件列表</h4><ul>
+<li><p>所要生成的 kubeconfig 配置文件列表</p>
+<table>
+<thead>
+<tr>
+<th><strong>配置文件名称</strong></th>
+<th><strong>组件证书文件名称</strong></th>
+<th><strong>组件秘钥文件名称</strong></th>
+<th><strong>根证书文件名称</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>admin.conf(kubectl)</td>
+<td>admin.crt</td>
+<td>admin.key</td>
+<td>ca.crt</td>
+</tr>
+<tr>
+<td>kubelet.conf</td>
+<td>kubelet.crt</td>
+<td>kubelet.key</td>
+<td>ca.crt</td>
+</tr>
+<tr>
+<td>scheduler.conf</td>
+<td>kube-scheduler.crt</td>
+<td>kube-scheduler.key</td>
+<td>ca.crt</td>
+</tr>
+<tr>
+<td>controller-manager.conf</td>
+<td>kube-controller-manager.crt</td>
+<td>sa.key</td>
+<td>ca.crt</td>
+</tr>
+</tbody></table>
+<ul>
+<li>操作前请先备份原有配置文件</li>
+<li>除了<code>kubelet.conf</code>文件需注意配置为对应节点的nodeName，其余配置文件可通用</li>
+<li>以下操作请先在一台 master 节点上操作确认没有问题后再进行配置其他节点</li>
+<li><code>--certificate-authority</code>：指定根证书</li>
+<li><code>--client-certificate</code>、<code>--client-key</code>：指定组件证书及秘钥</li>
+<li><code>--embed-certs=true</code>：将组件证书内容嵌入到生成的配置文件中(不加时，写入的是证书文件路径)</li>
+</ul>
+</li>
+</ul>
+<h4 id="admin-conf-kubectl"><a href="#admin-conf-kubectl" class="headerlink" title="admin.conf(kubectl)"></a>admin.conf(kubectl)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">KUBE_APISERVER=&quot;https://192.168.12.10:6443&quot;</span><br><span class="line">CLUSTER_NAME=&quot;kubernetes&quot;</span><br><span class="line">KUBE_USER=&quot;kubernetes-admin&quot;</span><br><span class="line">KUBE_CERT=&quot;admin&quot;</span><br><span class="line">KUBE_CONFIG=&quot;admin.conf&quot;</span><br><span class="line"></span><br><span class="line"># 设置集群参数</span><br><span class="line">kubectl config set-cluster $&#123;CLUSTER_NAME&#125; \</span><br><span class="line">  --certificate-authority=/etc/kubernetes/pki/ca.crt \</span><br><span class="line">  --embed-certs=true \</span><br><span class="line">  --server=$&#123;KUBE_APISERVER&#125; \</span><br><span class="line">  --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br><span class="line"></span><br><span class="line"># 设置客户端认证参数</span><br><span class="line">kubectl config set-credentials $&#123;KUBE_USER&#125; \</span><br><span class="line">  --client-certificate=/etc/kubernetes/pki/$&#123;KUBE_CERT&#125;.crt \</span><br><span class="line">  --client-key=/etc/kubernetes/pki/$&#123;KUBE_CERT&#125;.key \</span><br><span class="line">  --embed-certs=true \</span><br><span class="line">  --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br><span class="line"></span><br><span class="line"># 设置上下文参数</span><br><span class="line">kubectl config set-context $&#123;KUBE_USER&#125;@$&#123;CLUSTER_NAME&#125; \</span><br><span class="line">  --cluster=$&#123;CLUSTER_NAME&#125; \</span><br><span class="line">  --user=$&#123;KUBE_USER&#125; \</span><br><span class="line">  --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br><span class="line"></span><br><span class="line"># 设置当前使用的上下文</span><br><span class="line">kubectl config use-context $&#123;KUBE_USER&#125;@$&#123;CLUSTER_NAME&#125; --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br><span class="line"></span><br><span class="line"># 查看生成的配置文件</span><br><span class="line">kubectl config view --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="kubelet-conf（注意配置对应的nodeName）"><a href="#kubelet-conf（注意配置对应的nodeName）" class="headerlink" title="kubelet.conf（注意配置对应的nodeName）"></a>kubelet.conf（注意配置对应的nodeName）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">KUBE_APISERVER=&quot;https://192.168.12.10:6443&quot;</span><br><span class="line">CLUSTER_NAME=&quot;kubernetes&quot;</span><br><span class="line"># 此处为 master 节点 nodeName，每个 master 生成对应的 kubelet.conf</span><br><span class="line">KUBE_USER=&quot;system:node1:master&quot;</span><br><span class="line">KUBE_CERT=&quot;kubelet&quot;</span><br><span class="line">KUBE_CONFIG=&quot;kubelet.conf&quot;</span><br><span class="line"></span><br><span class="line"># 设置集群参数</span><br><span class="line">kubectl config set-cluster $&#123;CLUSTER_NAME&#125; \</span><br><span class="line">  --certificate-authority=/etc/kubernetes/pki/ca.crt \</span><br><span class="line">  --embed-certs=true \</span><br><span class="line">  --server=$&#123;KUBE_APISERVER&#125; \</span><br><span class="line">  --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br><span class="line"></span><br><span class="line"># 设置客户端认证参数</span><br><span class="line">kubectl config set-credentials $&#123;KUBE_USER&#125; \</span><br><span class="line">  --client-certificate=/etc/kubernetes/pki/$&#123;KUBE_CERT&#125;.crt \</span><br><span class="line">  --client-key=/etc/kubernetes/pki/$&#123;KUBE_CERT&#125;.key \</span><br><span class="line">  --embed-certs=true \</span><br><span class="line">  --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br><span class="line"></span><br><span class="line"># 设置上下文参数</span><br><span class="line">kubectl config set-context $&#123;KUBE_USER&#125;@$&#123;CLUSTER_NAME&#125; \</span><br><span class="line">  --cluster=$&#123;CLUSTER_NAME&#125; \</span><br><span class="line">  --user=$&#123;KUBE_USER&#125; \</span><br><span class="line">  --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br><span class="line"></span><br><span class="line"># 设置当前使用的上下文</span><br><span class="line">kubectl config use-context $&#123;KUBE_USER&#125;@$&#123;CLUSTER_NAME&#125; --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br><span class="line"></span><br><span class="line"># 查看生成的配置文件</span><br><span class="line">kubectl config view --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="scheduler-conf"><a href="#scheduler-conf" class="headerlink" title="scheduler.conf"></a>scheduler.conf</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">KUBE_APISERVER=&quot;https://192.168.12.10:6443&quot;</span><br><span class="line">CLUSTER_NAME=&quot;kubernetes&quot;</span><br><span class="line">KUBE_USER=&quot;system:kube-scheduler&quot;</span><br><span class="line">KUBE_CERT=&quot;kube-scheduler&quot;</span><br><span class="line">KUBE_CONFIG=&quot;scheduler.conf&quot;</span><br><span class="line"></span><br><span class="line"># 设置集群参数</span><br><span class="line">kubectl config set-cluster $&#123;CLUSTER_NAME&#125; \</span><br><span class="line">  --certificate-authority=/etc/kubernetes/pki/ca.crt \</span><br><span class="line">  --embed-certs=true \</span><br><span class="line">  --server=$&#123;KUBE_APISERVER&#125; \</span><br><span class="line">  --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br><span class="line"></span><br><span class="line"># 设置客户端认证参数</span><br><span class="line">kubectl config set-credentials $&#123;KUBE_USER&#125; \</span><br><span class="line">  --client-certificate=/etc/kubernetes/pki/$&#123;KUBE_CERT&#125;.crt \</span><br><span class="line">  --client-key=/etc/kubernetes/pki/$&#123;KUBE_CERT&#125;.key \</span><br><span class="line">  --embed-certs=true \</span><br><span class="line">  --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br><span class="line"></span><br><span class="line"># 设置上下文参数</span><br><span class="line">kubectl config set-context $&#123;KUBE_USER&#125;@$&#123;CLUSTER_NAME&#125; \</span><br><span class="line">  --cluster=$&#123;CLUSTER_NAME&#125; \</span><br><span class="line">  --user=$&#123;KUBE_USER&#125; \</span><br><span class="line">  --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br><span class="line"></span><br><span class="line"># 设置当前使用的上下文</span><br><span class="line">kubectl config use-context $&#123;KUBE_USER&#125;@$&#123;CLUSTER_NAME&#125; --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br><span class="line"></span><br><span class="line"># 查看生成的配置文件</span><br><span class="line">kubectl config view --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="controller-manager-conf"><a href="#controller-manager-conf" class="headerlink" title="controller-manager.conf"></a>controller-manager.conf</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">KUBE_APISERVER=&quot;https://192.168.12.10:6443&quot;</span><br><span class="line">CLUSTER_NAME=&quot;kubernetes&quot;</span><br><span class="line">KUBE_USER=&quot;system:kube-controller-manager&quot;</span><br><span class="line">KUBE_CERT=&quot;kube-controller-manager&quot;</span><br><span class="line">KUBE_CONFIG=&quot;controller-manager.conf&quot;</span><br><span class="line"></span><br><span class="line"># 设置集群参数</span><br><span class="line">kubectl config set-cluster $&#123;CLUSTER_NAME&#125; \</span><br><span class="line">  --certificate-authority=/etc/kubernetes/pki/ca.crt \</span><br><span class="line">  --embed-certs=true \</span><br><span class="line">  --server=$&#123;KUBE_APISERVER&#125; \</span><br><span class="line">  --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br><span class="line"></span><br><span class="line"># 设置客户端认证参数</span><br><span class="line">kubectl config set-credentials $&#123;KUBE_USER&#125; \</span><br><span class="line">  --client-certificate=/etc/kubernetes/pki/$&#123;KUBE_CERT&#125;.crt \</span><br><span class="line">  --client-key=/etc/kubernetes/pki/sa.key \</span><br><span class="line">  --embed-certs=true \</span><br><span class="line">  --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br><span class="line"></span><br><span class="line"># 设置上下文参数</span><br><span class="line">kubectl config set-context $&#123;KUBE_USER&#125;@$&#123;CLUSTER_NAME&#125; \</span><br><span class="line">  --cluster=$&#123;CLUSTER_NAME&#125; \</span><br><span class="line">  --user=$&#123;KUBE_USER&#125; \</span><br><span class="line">  --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br><span class="line"></span><br><span class="line"># 设置当前使用的上下文</span><br><span class="line">kubectl config use-context $&#123;KUBE_USER&#125;@$&#123;CLUSTER_NAME&#125; --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br><span class="line"></span><br><span class="line"># 查看生成的配置文件</span><br><span class="line">kubectl config view --kubeconfig=/etc/kubernetes/$&#123;KUBE_CONFIG&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="应用证书"><a href="#应用证书" class="headerlink" title="应用证书"></a>应用证书</h3><ul>
+<li><p>应用配置</p>
+<ul>
+<li><p>重启 Docker 和 Kubelet</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart docker</span><br><span class="line">systemctl restart kubelet</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看三个kubernetes组件（kubelet，controller-manager，scheduler）的日志，确认是否还有证书过期报错信息。</p>
+</li>
+</ul>
+</li>
+<li><p>Worker节点证书更新操作</p>
+<ul>
+<li><p>停止docker和kubelet</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop docker</span><br><span class="line">systemctl stop kubelet</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除<code>kubelet.conf</code>文件，文件一般在<code>/etc/kubernetes</code>目录下。</p>
+</li>
+<li><p>编辑<code>bootstrap-kubelet.conf</code>文件（文件一般在<code>/etc/kubernetes</code>目录下），修改<code>certificate-authority-data</code>内容，与master节点中的<code>admin.conf</code>文件的该区域内容相同。</p>
+</li>
+<li><p>备份后删除该目录下的文件<code>rm -rf /var/lib/kubelet/pki</code></p>
+</li>
+<li><p>启动docker和kubelet</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl start docker</span><br><span class="line">systemctl start kubelet</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>将全部kube-proxy重启</p>
+</li>
+<li><p>将全部网络插件重启（比如：flannel）</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/images/config/wechat_subscriber.png" alt="setzero wechat" style="width: 200px; max-width: 100%;">
+  <div></div>
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+            <a href="/tags/cert/" rel="tag"># cert</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/08/ls等io操作卡死处理办法/" rel="next" title="ls等io操作卡死处理办法">
+                <i class="fa fa-chevron-left"></i> ls等io操作卡死处理办法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/11/Jenkins安装与实践/" rel="prev" title="Jenkins安装与实践">
+                Jenkins安装与实践 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">setzero</p>
+              <div class="site-description motion-element" itemprop="description">回首向来萧瑟处，归去，也无风雨也无晴。</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/TimeBye" title="GitHub &rarr; https://github.com/TimeBye" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://weibo.com/u/2153362077" title="Weibo &rarr; http://weibo.com/u/2153362077" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一步：获取证书签发信息"><span class="nav-number">1.</span> <span class="nav-text">第一步：获取证书签发信息</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#方式一：通过原有证书进行获取相关信息"><span class="nav-number">1.1.</span> <span class="nav-text">方式一：通过原有证书进行获取相关信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方式二：自行统计各项信息"><span class="nav-number">1.2.</span> <span class="nav-text">方式二：自行统计各项信息</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二步：创建证书"><span class="nav-number">2.</span> <span class="nav-text">第二步：创建证书</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建CA服务端证书签名请求配置文件openssl-conf"><span class="nav-number">2.1.</span> <span class="nav-text">创建CA服务端证书签名请求配置文件openssl.conf</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建集群-key-与-CA"><span class="nav-number">2.2.</span> <span class="nav-text">创建集群 key 与 CA</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建-Certificates"><span class="nav-number">2.3.</span> <span class="nav-text">创建 Certificates</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三步：生成kubernetes各组件配置文件并应用"><span class="nav-number">3.</span> <span class="nav-text">第三步：生成kubernetes各组件配置文件并应用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#所要生成的配置文件列表"><span class="nav-number">3.1.</span> <span class="nav-text">所要生成的配置文件列表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#admin-conf-kubectl"><span class="nav-number">3.2.</span> <span class="nav-text">admin.conf(kubectl)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kubelet-conf（注意配置对应的nodeName）"><span class="nav-number">3.3.</span> <span class="nav-text">kubelet.conf（注意配置对应的nodeName）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#scheduler-conf"><span class="nav-number">3.4.</span> <span class="nav-text">scheduler.conf</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#controller-manager-conf"><span class="nav-number">3.5.</span> <span class="nav-text">controller-manager.conf</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用证书"><span class="nav-number">4.</span> <span class="nav-text">应用证书</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">setzero</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.1"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: true,
+    appId: 'XtdzaNNhj3QzwpLfEPRyPB4f-gzGzoHsz',
+    appKey: 'PVBOEPyETkedTsomHnvrpC63',
+    placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn'
+  });
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $('.leancloud_visitors');
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            
+            Counter('put', '/classes/Counter/' + counter.objectId, JSON.stringify({ time: { '__op': 'Increment', 'amount': 1 } }))
+            
+              .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+              })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! More info at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .fail(function ({ responseJSON }) {
+          console.log('LeanCloud Counter Error: ' + responseJSON.code + ' ' + responseJSON.error);
+        });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + 'XtdzaNNhj3QzwpLfEPRyPB4f-gzGzoHsz')
+        .done(function({ api_server }) {
+          var Counter = function(method, url, data) {
+            return $.ajax({
+              method: method,
+              url: 'https://' + api_server + '/1.1' + url,
+              headers: {
+                'X-LC-Id': 'XtdzaNNhj3QzwpLfEPRyPB4f-gzGzoHsz',
+                'X-LC-Key': 'PVBOEPyETkedTsomHnvrpC63',
+                'Content-Type': 'application/json',
+              },
+              data: data
+            });
+          };
+          
+            addCount(Counter);
+          
+        });
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
