@@ -128,7 +128,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://timebye.github.io/images/2019-05-26-%E5%AE%9E%E7%8E%B0-Ingress-Https-%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/2019-05-26-12-17-05.png?40">
 <meta property="og:image" content="https://timebye.github.io/images/2019-05-26-%E5%AE%9E%E7%8E%B0-Ingress-Https-%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/2019-05-26-12-17-35.png?650x405">
-<meta property="og:updated_time" content="2019-06-11T10:26:56.535Z">
+<meta property="og:updated_time" content="2019-09-24T04:36:17.542Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="实现 Ingress Https 常用工具">
 <meta name="twitter:description" content="什么是 HTTPS超文本传输协议 HTTP 协议被用于在 Web 浏览器和网站服务器之间传递信息，HTTP 协议以明文方式发送内容，不提供任何方式的数据加密，如果攻击者截取了 Web 浏览器和网站服务器之间的传输报文，就可以直接读懂其中的信息，因此，HTTP 协议不适合传输一些敏感信息，比如：信用卡号、密码等支付信息。 为了解决 HTTP 协议的这一缺陷，需要使用另一种协议：安全套接字层超文本传">
@@ -518,9 +518,15 @@
 <li>spec.acme.http01 这里指示签发机构使用 HTTP-01 的方式进行 acme 协议 (还可以用 DNS 方式，acme 协议的目的是证明这台机器和域名都是属于你的，然后才准许给你颁发证书)。</li>
 </ul>
 </li>
+<li><p>部署</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl apply -f letsencrypt-prod-issuer.yaml</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看 ClusterIssuer 创建结果</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl get clusterissuer</span></span><br><span class="line">NAME               AGE</span><br><span class="line">letsencrypt-prod   11m</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
 </li>
-<li><p>创建 Certificate<br>  有了签发机构，接下来我们就可以生成免费证书了，Cert-Manager 给我们提供了 Certificate 这个用于生成证书的自定义资源对象，它必须局限在某一个  Namespace 下，证书最终会在这个 Namespace 下以 Secret 的资源对象存储，创建一个 Certificate 对象：</p>
+<li><p>创建 Certificate<br>有了签发机构，接下来我们就可以生成免费证书了，Cert-Manager 给我们提供了 Certificate 这个用于生成证书的自定义资源对象，它必须局限在某个  Namespace 下，证书最终会在这个 Namespace 下以 Secret 的资源对象存储，创建一个 Certificate 对象：</p>
 <ul>
 <li><p>certificate.yaml</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: certmanager.k8s.io/v1alpha1</span><br><span class="line">kind: Certificate</span><br><span class="line">metadata:</span><br><span class="line">  name: dashboard-imroc-io</span><br><span class="line">  namespace: istio-system</span><br><span class="line">spec:</span><br><span class="line">  secretName: dashboard-imroc-io</span><br><span class="line">  issuerRef:</span><br><span class="line">    name: letsencrypt-prod</span><br><span class="line">    kind: ClusterIssuer</span><br><span class="line">  dnsNames:</span><br><span class="line">  - istio.kiali.com</span><br><span class="line">  acme:</span><br><span class="line">    config:</span><br><span class="line">    - http01:</span><br><span class="line">        ingressClass: traefik</span><br><span class="line">      domains:</span><br><span class="line">      - istio.kiali.com</span><br></pre></td></tr></table></figure>
@@ -535,7 +541,41 @@
 <li>spec.acme.config.http01.domains 指示该证书的可以用于哪些域名。</li>
 </ul>
 </li>
+<li><p>执行部署命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f cert.yaml</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看 Certificate 创建结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get certificate -n istio-system</span><br><span class="line">NAME                 AGE</span><br><span class="line">dashboard-imroc-io   54s</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>执行上述步骤，如有问题，可使用如下命令排查原因</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl describe -n istio-system certificate dashboard-imroc-io</span><br><span class="line">$ kubectl describe clusterissuer letsencrypt-prod</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看生成的 Secret 结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get secret -n istio-system | grep dashboard-imroc-io</span><br><span class="line">dashboard-imroc-io      kubernetes.io/tls</span><br></pre></td></tr></table></figure>
+
+</li>
 </ul>
+</li>
+</ul>
+<h3 id="测试-Ingress-使用-HTTPS"><a href="#测试-Ingress-使用-HTTPS" class="headerlink" title="测试 Ingress 使用 HTTPS"></a>测试 Ingress 使用 HTTPS</h3><ul>
+<li><p>创建一个 Nginx</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl run nginx --image=nginx --port=80 --expose</span></span><br><span class="line">kubectl run --generator=deployment/apps.v1 is DEPRECATED and will be removed in a future version. Use kubectl run --generator=run-pod/v1 or kubectl create instead.</span><br><span class="line">service/nginx created</span><br><span class="line">deployment.apps/nginx created</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">$</span> <span class="string">cat</span> <span class="string">ingress.yaml</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Ingress</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">my-nginx</span></span><br><span class="line"><span class="attr">  annotations:</span></span><br><span class="line">    <span class="string">kubernetes.io/ingress.class:</span> <span class="string">"traefik"</span></span><br><span class="line">    <span class="string">kubernetes.io/tls-acme:</span> <span class="string">"true"</span></span><br><span class="line">    <span class="string">certmanager.k8s.io/cluster-issuer:</span> <span class="string">"letsencrypt-prod"</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  rules:</span></span><br><span class="line"><span class="attr">  - host:</span> <span class="string">test.nginx.com</span></span><br><span class="line"><span class="attr">    http:</span></span><br><span class="line"><span class="attr">      paths:</span></span><br><span class="line"><span class="attr">      - backend:</span></span><br><span class="line"><span class="attr">          serviceName:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">          servicePort:</span> <span class="number">80</span></span><br><span class="line"><span class="attr">        path:</span> <span class="string">/</span></span><br><span class="line"><span class="attr">  tls:</span></span><br><span class="line"><span class="attr">  - secretName:</span> <span class="string">dashboard-imroc-io</span></span><br><span class="line"><span class="attr">    hosts:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">test.nginx.com</span></span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是上面我们添加的两个 annotations 非常重要，这个将告诉 Cert Manager 去生成证书，然后由于我们这里要使用 HTTPS，所以我们需要添加一个 TLS 证书，而证书就是通过 k8sui-tls 这个 Secret 对象来提供的，要注意的是这个 Secret 对象并不是我们手动创建的，而是 Cert Manager 自动创建的证书对应的对应。然后直接创建这个资源对象即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f test-nginx.yaml</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建完成后隔一会儿我们可以看到会多出现一个随机名称的 Ingress 对象，这个 Ingress 对象就是用来专门验证证书的：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl get ingress -n istio-system</span></span><br><span class="line">NAME                        HOSTS                    ADDRESS   PORTS     AGE</span><br><span class="line">cm-acme-http-solver-z562f   test.nginx.com                     80        62s</span><br></pre></td></tr></table></figure>
+
+<p>我们可以通过 Traefik 的 Dashboard 可以观察到这一变化，验证成功后，这个 Ingress 对象也自动删除了：<br>这个时候我们可以去 describe 下我们的 Ingress 对象，查看有无报错。</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl describe ingress my-nginx</span></span><br></pre></td></tr></table></figure>
+
+<p>同样我们可以去查看 Cert Manager 的 Pod 日志信息：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl logs -f cert-manager-5658b7db79-824lt --namespace cert-manager</span></span><br></pre></td></tr></table></figure>
+
+<p>最后，我们来打开浏览器使用 HTTPS 访问服务。<br>到这里我们就完成了使用 Let’s Encrypt 实现 Kubernetes Ingress 自动化 HTTPS。</p>
 </li>
 </ul>
 
@@ -829,7 +869,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是-HTTPS"><span class="nav-number">1.</span> <span class="nav-text">什么是 HTTPS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是-Cert-Manager"><span class="nav-number">2.</span> <span class="nav-text">什么是 Cert-Manager</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署-Cert-Manager"><span class="nav-number">3.</span> <span class="nav-text">部署 Cert-Manager</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是-HTTPS"><span class="nav-number">1.</span> <span class="nav-text">什么是 HTTPS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是-Cert-Manager"><span class="nav-number">2.</span> <span class="nav-text">什么是 Cert-Manager</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署-Cert-Manager"><span class="nav-number">3.</span> <span class="nav-text">部署 Cert-Manager</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试-Ingress-使用-HTTPS"><span class="nav-number">4.</span> <span class="nav-text">测试 Ingress 使用 HTTPS</span></a></li></ol></div>
             
 
           </div>
