@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<!--
+                           _ooOoo_
+                          o8888888o
+                          88" . "88
+                          (| -_- |)
+                          O\  =  /O
+                       ____/`---'\____
+                     .'  \\|     |//  `.
+                    /  \\|||  :  |||//  \
+                   /  _||||| -:- |||||-  \
+                   |   | \\\  -  /// |   |
+                   | \_|  ''\---/''  |   |
+                   \  .-\__  `-`  ___/-. /
+                 ___`. .'  /--.--\  `. . __
+              ."" '<  `.___\_<|>_/___.'  >'"".
+             | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+             \  \ `-.   \_ __\ /__ _/   .-` /  /
+        ======`-.____`-.___\_____/___.-`____.-'======
+                           `=---='
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                 佛祖保佑       永无BUG  By:- timebye.github.io
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="什么是 CephCeph是一个统一的分布式存储系统，设计初衷是提供较好的性能、可靠性和可扩展性。Ceph项目最早起源于Sage就读博士期间的工作（最早的成果于2004年发表），并随后贡献给开源社区。在经过了数年的发展之后，目前已得到众多云计算厂商的支持并被广泛应用。RedHat及OpenStack都可与Ceph整合以支持虚拟机镜像的后端存储。">
+<meta name="keywords" content="kubernetes,ceph,pv,pvc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ceph Ansible with kubernetes">
+<meta property="og:url" content="https://timebye.github.io/2019/07/15/Ceph-Ansible-with-kubernetes/index.html">
+<meta property="og:site_name" content="拾穗">
+<meta property="og:description" content="什么是 CephCeph是一个统一的分布式存储系统，设计初衷是提供较好的性能、可靠性和可扩展性。Ceph项目最早起源于Sage就读博士期间的工作（最早的成果于2004年发表），并随后贡献给开源社区。在经过了数年的发展之后，目前已得到众多云计算厂商的支持并被广泛应用。RedHat及OpenStack都可与Ceph整合以支持虚拟机镜像的后端存储。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://timebye.github.io/2019/07/15/images/2019-07-15-Ceph-Ansible-with-kubernetes/2019-08-15-14-23-19.png">
+<meta property="og:updated_time" content="2019-09-24T02:39:57.237Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ceph Ansible with kubernetes">
+<meta name="twitter:description" content="什么是 CephCeph是一个统一的分布式存储系统，设计初衷是提供较好的性能、可靠性和可扩展性。Ceph项目最早起源于Sage就读博士期间的工作（最早的成果于2004年发表），并随后贡献给开源社区。在经过了数年的发展之后，目前已得到众多云计算厂商的支持并被广泛应用。RedHat及OpenStack都可与Ceph整合以支持虚拟机镜像的后端存储。">
+<meta name="twitter:image" content="https://timebye.github.io/2019/07/15/images/2019-07-15-Ceph-Ansible-with-kubernetes/2019-08-15-14-23-19.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://timebye.github.io/2019/07/15/Ceph-Ansible-with-kubernetes/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Ceph Ansible with kubernetes | 拾穗</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <script src="/js/hexo_resize_image.js"></script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拾穗</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+
+  
+
+  <a href="https://github.com/timebye" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://timebye.github.io/2019/07/15/Ceph-Ansible-with-kubernetes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="setzero">
+      <meta itemprop="description" content="回首向来萧瑟处，归去，也无风雨也无晴。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拾穗">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Ceph Ansible with kubernetes
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-15 14:19:23" itemprop="dateCreated datePublished" datetime="2019-07-15T14:19:23+08:00">2019-07-15</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2019/07/15/Ceph-Ansible-with-kubernetes/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/07/15/Ceph-Ansible-with-kubernetes/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+            <span id="/2019/07/15/Ceph-Ansible-with-kubernetes/" class="leancloud_visitors" data-flag-title="Ceph Ansible with kubernetes">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读次数：</span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="../images/2019-07-15-Ceph-Ansible-with-kubernetes/2019-08-15-14-23-19.png" alt></p>
+<h3 id="什么是-Ceph"><a href="#什么是-Ceph" class="headerlink" title="什么是 Ceph"></a>什么是 Ceph</h3><p>Ceph是一个统一的分布式存储系统，设计初衷是提供较好的性能、可靠性和可扩展性。Ceph项目最早起源于Sage就读博士期间的工作（最早的成果于2004年发表），并随后贡献给开源社区。在经过了数年的发展之后，目前已得到众多云计算厂商的支持并被广泛应用。RedHat及OpenStack都可与Ceph整合以支持虚拟机镜像的后端存储。</p>
+<a id="more"></a>
+
+<h3 id="核心组件及概念介绍"><a href="#核心组件及概念介绍" class="headerlink" title="核心组件及概念介绍"></a>核心组件及概念介绍</h3><ul>
+<li>Monitor<br>一个Ceph集群需要多个Monitor组成的小集群，它们通过Paxos同步数据，用来保存OSD的元数据。</li>
+<li>OSD<br>OSD全称Object Storage Device，也就是负责响应客户端请求返回具体数据的进程。一个Ceph集群一般都有很多个OSD。</li>
+<li>MDS<br>MDS全称Ceph Metadata Server，是CephFS服务依赖的元数据服务。</li>
+<li>Object<br>Ceph最底层的存储单元是Object对象，每个Object包含元数据和原始数据。</li>
+<li>PG<br>PG全称Placement Grouops，是一个逻辑的概念，一个PG包含多个OSD。引入PG这一层其实是为了更好的分配数据和定位数据。</li>
+<li>RADOS<br>RADOS全称Reliable Autonomic Distributed Object Store，是Ceph集群的精华，用户实现数据分配、Failover等集群操作。</li>
+<li>Libradio<br>Librados是Rados提供库，因为RADOS是协议很难直接访问，因此上层的RBD、RGW和CephFS都是通过librados访问的，目前提供PHP、Ruby、Java、Python、C和C++支持。</li>
+<li>CRUSH<br>CRUSH是Ceph使用的数据分布算法，类似一致性哈希，让数据分配到预期的地方。</li>
+<li>RBD<br>RBD全称RADOS block device，是Ceph对外提供的块设备服务。</li>
+<li>RGW<br>RGW全称RADOS gateway，是Ceph对外提供的对象存储服务，接口与S3和Swift兼容。</li>
+<li>CephFS<br>CephFS全称Ceph File System，是Ceph对外提供的文件系统服务。</li>
+</ul>
+<h3 id="ceph-ansible"><a href="#ceph-ansible" class="headerlink" title="ceph-ansible"></a>ceph-ansible</h3><ul>
+<li><p>ceph 官方提供了 ansible 的安装脚本 ceph-ansible。将项目克隆到本地，可以看到最新的稳定版本是 stable-4.0，克隆代码后注意切换到改分支或者4.x的tag。根据集群要求准备了3台服务器。部署 OSDs 的节点需要一块额外的磁盘用作存储。ansible 的 hosts 文件如下所示:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[all]</span></span><br><span class="line">192.168.56.121 ansible_user=vagrant ansible_ssh_pass=vagrant ansible_become=true</span><br><span class="line">192.168.56.122 ansible_user=vagrant ansible_ssh_pass=vagrant ansible_become=true</span><br><span class="line">192.168.56.123 ansible_user=vagrant ansible_ssh_pass=vagrant ansible_become=true</span><br><span class="line"></span><br><span class="line"><span class="section">[mons]</span></span><br><span class="line">192.168.56.121</span><br><span class="line">192.168.56.122</span><br><span class="line">192.168.56.123</span><br><span class="line"></span><br><span class="line"><span class="section">[osds]</span></span><br><span class="line">192.168.56.121</span><br><span class="line">192.168.56.122</span><br><span class="line">192.168.56.123</span><br><span class="line"></span><br><span class="line"><span class="section">[mgrs]</span></span><br><span class="line">192.168.56.121</span><br><span class="line">192.168.56.122</span><br><span class="line">192.168.56.123</span><br><span class="line"></span><br><span class="line"><span class="section">[mdss]</span></span><br><span class="line">192.168.56.121</span><br><span class="line">192.168.56.122</span><br><span class="line">192.168.56.123</span><br><span class="line"></span><br><span class="line"><span class="section">[grafana-server]</span></span><br><span class="line">192.168.56.121</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>这里将 192.168.56.121 作为用于执行 ansible-playbook 的节点。在这个节点上需要配置到另外2台服务器的 ssh 免密码登录并安装一些依赖:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> host <span class="keyword">in</span> \</span><br><span class="line">    192.168.56.121 \</span><br><span class="line">    192.168.56.122 \</span><br><span class="line">    192.168.56.123; \</span><br><span class="line">    <span class="keyword">do</span> \</span><br><span class="line">      ssh-copy-id -i ~/.ssh/id_rsa.pub vagrant@<span class="variable">$host</span>; \</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line">yum install -y ansible epel-release python2-pip</span><br><span class="line">pip install -r requirements.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置 site.yml 配置文件，将没用到的 hosts 注释:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- hosts:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">mons</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">osds</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">mgrs</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">mdss</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">grafana-server</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置全局变量 group_vars/all.yml:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">cluster:</span> <span class="string">ceph</span></span><br><span class="line"></span><br><span class="line"><span class="attr">centos_package_dependencies:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">epel-release</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">libselinux-python</span></span><br><span class="line"><span class="attr">ceph_origin:</span> <span class="string">repository</span></span><br><span class="line"><span class="attr">ceph_repository:</span> <span class="string">community</span></span><br><span class="line"><span class="attr">ceph_mirror:</span> <span class="attr">http://mirrors.aliyun.com/ceph</span></span><br><span class="line"><span class="attr">ceph_stable_key:</span> <span class="attr">http://mirrors.aliyun.com/ceph/keys/release.asc</span></span><br><span class="line"><span class="attr">ceph_stable_repo:</span> <span class="string">"<span class="template-variable">&#123;&#123; ceph_mirror &#125;&#125;</span>/rpm-<span class="template-variable">&#123;&#123; ceph_stable_release &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">ceph_stable_release:</span> <span class="string">nautilus</span></span><br><span class="line"><span class="attr">ceph_stable:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">fetch_directory:</span> <span class="string">~/ceph-ansible-keys</span></span><br><span class="line"><span class="attr">monitor_interface:</span> <span class="string">eth0</span></span><br><span class="line"><span class="attr">public_network:</span> <span class="number">192.168</span><span class="number">.56</span><span class="number">.1</span><span class="string">/24</span></span><br><span class="line"><span class="attr">cluster_network:</span> <span class="string">"<span class="template-variable">&#123;&#123; public_network &#125;&#125;</span>"</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置 OSDs 变量，主要配置用哪个盘存储数据:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">devices:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">/dev/vdb</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置好可以运行 ansible-playbook -i hosts site.yml;等待 ceph 安装完毕。安装完成后执行 ceph -s 可以看到如下输出:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cluster:</span><br><span class="line">  id:     b358e8f9-3ffa-438b-8b38-38f9f5468d12</span><br><span class="line">  health: HEALTH_OK</span><br><span class="line"> </span><br><span class="line">services:</span><br><span class="line">  mon: 3 daemons, quorum VM_48_51_centos,VM_48_62_centos,VM_48_83_centos (age 2d)</span><br><span class="line">  mgr: VM_48_51_centos(active, since 2d), standbys: VM_48_83_centos</span><br><span class="line">  osd: 3 osds: 3 up (since 87m), 3 in (since 87m)</span><br><span class="line"> </span><br><span class="line">data:</span><br><span class="line">  pools:   0 pools, 0 pgs</span><br><span class="line">  objects: 0 objects, 0 B</span><br><span class="line">  usage:   3.0 GiB used, 294 GiB / 297 GiB avail</span><br><span class="line">  pgs:</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="kubernetes-配置-ceph"><a href="#kubernetes-配置-ceph" class="headerlink" title="kubernetes 配置 ceph"></a>kubernetes 配置 ceph</h3><h4 id="客户端节点配置"><a href="#客户端节点配置" class="headerlink" title="客户端节点配置"></a>客户端节点配置</h4><ul>
+<li><p>k8s 节点安装 ceph 客户端，添加 ceph 的源，将以下内容写入到 /etc/yum.repo.d/ceph.repo:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[ceph]</span><br><span class="line">name=Ceph noarch packages</span><br><span class="line">baseurl=http://mirrors.aliyun.com/ceph/rpm-nautilus/el7/x86_64/</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">type=rpm-md</span><br><span class="line">gpgkey=http://mirrors.aliyun.com/ceph/keys/release.asc</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装，注意版本要和服务端的一致。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum clean all &amp;&amp; yum makecache</span><br><span class="line">yum install -y ceph-common</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建 RBD pool:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph osd pool create kube 128</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>授权 kube 用户:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ceph auth get-or-create client.kube mon &apos;allow r&apos; osd &apos;allow class-read, allow rwx pool=kube&apos; -o ceph.client.kube.keyring</span><br><span class="line">ceph auth get client.kube</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将生成的 keyring 文件放到 k8s 节点的 /etc/ceph/ 目录下</p>
+</li>
+</ul>
+<h4 id="创建-storageclass"><a href="#创建-storageclass" class="headerlink" title="创建 storageclass"></a>创建 storageclass</h4><ul>
+<li><p>创建 ceph secret:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ceph auth get-key client.admin | base64</span><br><span class="line">ceph auth get-key client.kube | base64</span><br><span class="line">kubectl apply -f ceph-kube-secret.yaml</span><br></pre></td></tr></table></figure>
+
+<details><summary>ceph-kube-secret.yaml</summary>
+  <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Namespace</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">ceph</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Secret</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">ceph-admin-secret</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">ceph</span></span><br><span class="line"><span class="attr">type:</span> <span class="string">kubernetes.io/rbd</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line"><span class="attr">  key:</span> <span class="string">QVFEVGdBOWQ4bDA1TUJBQWhnamFJNHd6QzROVXJyR1J3RnlPWnc9PQ==</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Secret</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">ceph-kube-secret</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">ceph</span></span><br><span class="line"><span class="attr">type:</span> <span class="string">kubernetes.io/rbd</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line"><span class="attr">  key:</span> <span class="string">QVFBVWJ4VmRYbHNwS3hBQUxJSDdQWmxlalk5WW10Rm5DRnQwU2c9PQ==</span></span><br></pre></td></tr></table></figure>
+
+</details>
+</li>
+<li><p>创建动态 RBD StorageClass:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f ceph-storageclass.yaml</span><br></pre></td></tr></table></figure>
+
+<details><summary>ceph-storageclass.yaml</summary>
+  <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">storage.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">StorageClass</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">ceph-rbd</span></span><br><span class="line"><span class="attr">  annotations:</span></span><br><span class="line">    <span class="string">storageclass.kubernetes.io/is-default-class:</span> <span class="string">"true"</span></span><br><span class="line"><span class="attr">provisioner:</span> <span class="string">kubernetes.io/rbd</span></span><br><span class="line"><span class="attr">parameters:</span></span><br><span class="line"><span class="attr">  monitors:</span> <span class="number">192.168</span><span class="number">.0</span><span class="number">.10</span><span class="string">:6789,192.168.0.11:6789,192.168.0.12:6789</span></span><br><span class="line"><span class="attr">  adminId:</span> <span class="string">admin</span></span><br><span class="line"><span class="attr">  adminSecretName:</span> <span class="string">ceph-admin-secret</span></span><br><span class="line"><span class="attr">  adminSecretNamespace:</span> <span class="string">ceph</span></span><br><span class="line"><span class="attr">  pool:</span> <span class="string">kube</span></span><br><span class="line"><span class="attr">  userId:</span> <span class="string">kube</span></span><br><span class="line"><span class="attr">  userSecretName:</span> <span class="string">ceph-kube-secret</span></span><br><span class="line"><span class="attr">  fsType:</span> <span class="string">xfs</span></span><br><span class="line"><span class="attr">  imageFormat:</span> <span class="string">"2"</span></span><br><span class="line"><span class="attr">  imageFeatures:</span> <span class="string">"layering"</span></span><br></pre></td></tr></table></figure>
+
+</details>
+</li>
+<li><p>创建 pvc 测试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f ceph-pvc.yaml -n ceph</span><br></pre></td></tr></table></figure>
+
+<details><summary>ceph-pvc.yaml</summary>
+  <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolumeClaim</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">ceph-pvc</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">ceph</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  storageClassName:</span> <span class="string">ceph-rbd</span></span><br><span class="line"><span class="attr">  accessModes:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">ReadOnlyMany</span></span><br><span class="line"><span class="attr">  resources:</span></span><br><span class="line"><span class="attr">    requests:</span></span><br><span class="line"><span class="attr">      storage:</span> <span class="number">1</span><span class="string">Gi</span></span><br></pre></td></tr></table></figure>
+
+</details>
+
+<p>查看 pvc 的状态发现一直是 pending，describe 查看 pvc 事件，发现报错:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rbd: create volume failed, err: executable file not found in $PATH</span><br></pre></td></tr></table></figure>
+
+<p>结合日志查阅资料发现是在 kube-controller-manager 的 pod 容器中没有 rbd 命令。具体可以查看 github issue 可以通过安装 external-storage 插件来解决。克隆下来后路径如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ceph</span><br><span class="line">└── rbd</span><br><span class="line">    └── deploy</span><br><span class="line">        ├── non-rbac</span><br><span class="line">        │   └── deployment.yaml</span><br><span class="line">        ├── rbac</span><br><span class="line">        │   ├── clusterrolebinding.yaml</span><br><span class="line">        │   ├── clusterrole.yaml</span><br><span class="line">        │   ├── deployment.yaml</span><br><span class="line">        │   ├── rolebinding.yaml</span><br><span class="line">        │   ├── role.yaml</span><br><span class="line">        │   └── serviceaccount.yaml</span><br><span class="line">        └── README.md</span><br></pre></td></tr></table></figure>
+
+<p>由于部署 k8s 集群的时候启用了 rbac，所以我们用 rbac 目录下的部署文件。将 clusterrolebinding.yaml 和 rolebingding.yaml 的 namespace 修改为 ceph，然后部署:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f rbac -n ceph</span><br></pre></td></tr></table></figure>
+
+<p>等到部署完成后，修改 storageClass 的配置，把 provisioner: kubernetes.io/rbd 更改为 provisioner: ceph.com/rbd，重新部署。等待创建完成，重新部署 pvc，发现已经可以绑定了。查看 pvc 发现也已经创建了。</p>
+<p>到 ceph 的 monitor 节点上，执行如下命令:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rbd ls -p kube</span><br><span class="line">rbd info kubernetes-dynamic-pvc-10321857-9952-11e9-aac5-0a580ae9419b -p kube</span><br></pre></td></tr></table></figure>
+
+<p>可以获取到 image 的详细信息，说明 ceph 确实被使用了。</p>
+</li>
+<li><p>创建一个 pod 进行测试，发现 pod 一直处于 container creating 的状态。</p>
+<details><summary>pod.yaml</summary>
+  <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    test:</span> <span class="string">rbd-dyn-pvc-pod</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">ceph-rbd-dyn-pv-pod2</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">ceph-rbd-dyn-pv-busybox2</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">busybox</span></span><br><span class="line"><span class="attr">    command:</span> <span class="string">["sleep",</span> <span class="string">"60000"</span><span class="string">]</span></span><br><span class="line"><span class="attr">    volumeMounts:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">ceph-dyn-rbd-vol1</span></span><br><span class="line"><span class="attr">      mountPath:</span> <span class="string">/mnt/ceph-dyn-rbd-pvc/busybox</span></span><br><span class="line"><span class="attr">      readOnly:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">  volumes:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">ceph-dyn-rbd-vol1</span></span><br><span class="line"><span class="attr">    persistentVolumeClaim:</span></span><br><span class="line"><span class="attr">      claimName:</span> <span class="string">ceph-pvc</span></span><br></pre></td></tr></table></figure>
+
+</details>
+
+<p>查看 pod 事件，发现如下报错:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MountVolume.WaitForAttach failed for volume &quot;pvc-ec2aa2a2-b290-11e9-998e-5254003f0e66&quot; : rbd: map failed exit status 110, rbd output: rbd: sysfs write failed</span><br><span class="line">In some cases useful info is found in syslog - try &quot;dmesg | tail&quot;.</span><br><span class="line">rbd: map failed: (110) Connection timed out</span><br></pre></td></tr></table></figure>
+
+<p>在 pod 所在节点执行命令 dmesg | tail，发现如下报错:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[260542.633436] libceph: mon1 10.107.36.4:6789 feature set mismatch, my 106b84a842a42 &lt; server&apos;s 40106b84a842a42, missing 400000000000000</span><br><span class="line">[260542.638039] libceph: mon1 10.107.36.4:6789 missing required protocol features</span><br><span class="line">[260552.602373] libceph: mon2 10.107.36.12:6789 feature set mismatch, my 106b84a842a42 &lt; server&apos;s 40106b84a842a42, missing 400000000000000</span><br><span class="line">[260552.606904] libceph: mon2 10.107.36.12:6789 missing required protocol features</span><br><span class="line">[260562.618453] libceph: mon0 10.107.36.21:6789 feature set mismatch, my 106b84a842a42 &lt; server&apos;s 40106b84a842a42, missing 400000000000000</span><br><span class="line">[260562.623014] libceph: mon0 10.107.36.21:6789 missing required protocol features</span><br></pre></td></tr></table></figure>
+
+<p>查阅资料发现这个错误和内核的特性有关，可以升级内核至4.5以上。也可以通过设置 ceph 来解决，具体可以查看 <a href="https://k2r2bai.com/2018/02/11/ceph/luminous-crush-issue/" target="_blank" rel="noopener">https://k2r2bai.com/2018/02/11/ceph/luminous-crush-issue/</a></p>
+<p>这里通过调整 ceph 配置来解决:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph osd crush tunables hammer</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="ceph-配置-dashboard"><a href="#ceph-配置-dashboard" class="headerlink" title="ceph 配置 dashboard"></a>ceph 配置 dashboard</h4><ul>
+<li><p>启用模块：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph mgr enable dashboard</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建证书：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph dashboard create-self-signed-cert</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ceph mgr module disable dashboard</span><br><span class="line">ceph mgr module enable dashboard</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置 ip，端口：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ceph config set mgr mgr/dashboard/server_addr $IP</span><br><span class="line">ceph config set mgr mgr/dashboard/server_port $PORT</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意 ip 是 active monitor 节点的 ip</p>
+</blockquote>
+</li>
+<li><p>创建用户：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph dashboard ac-user-create &lt;username&gt; &lt;password&gt; administrator</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/images/config/wechat_subscriber.png" alt="setzero wechat" style="width: 200px; max-width: 100%;">
+  <div></div>
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+            <a href="/tags/ceph/" rel="tag"># ceph</a>
+          
+            <a href="/tags/pv/" rel="tag"># pv</a>
+          
+            <a href="/tags/pvc/" rel="tag"># pvc</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/11/elasticsearch-安装笔记/" rel="next" title="elasticsearch 安装笔记">
+                <i class="fa fa-chevron-left"></i> elasticsearch 安装笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/23/Frp-使用/" rel="prev" title="Frp 使用">
+                Frp 使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">setzero</p>
+              <div class="site-description motion-element" itemprop="description">回首向来萧瑟处，归去，也无风雨也无晴。</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/TimeBye" title="GitHub &rarr; https://github.com/TimeBye" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://weibo.com/u/2153362077" title="Weibo &rarr; http://weibo.com/u/2153362077" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是-Ceph"><span class="nav-number">1.</span> <span class="nav-text">什么是 Ceph</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#核心组件及概念介绍"><span class="nav-number">2.</span> <span class="nav-text">核心组件及概念介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ceph-ansible"><span class="nav-number">3.</span> <span class="nav-text">ceph-ansible</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kubernetes-配置-ceph"><span class="nav-number">4.</span> <span class="nav-text">kubernetes 配置 ceph</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#客户端节点配置"><span class="nav-number">4.1.</span> <span class="nav-text">客户端节点配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建-storageclass"><span class="nav-number">4.2.</span> <span class="nav-text">创建 storageclass</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ceph-配置-dashboard"><span class="nav-number">4.3.</span> <span class="nav-text">ceph 配置 dashboard</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">setzero</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.1"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: true,
+    appId: 'XtdzaNNhj3QzwpLfEPRyPB4f-gzGzoHsz',
+    appKey: 'PVBOEPyETkedTsomHnvrpC63',
+    placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn'
+  });
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $('.leancloud_visitors');
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            
+            Counter('put', '/classes/Counter/' + counter.objectId, JSON.stringify({ time: { '__op': 'Increment', 'amount': 1 } }))
+            
+              .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+              })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! More info at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .fail(function ({ responseJSON }) {
+          console.log('LeanCloud Counter Error: ' + responseJSON.code + ' ' + responseJSON.error);
+        });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + 'XtdzaNNhj3QzwpLfEPRyPB4f-gzGzoHsz')
+        .done(function({ api_server }) {
+          var Counter = function(method, url, data) {
+            return $.ajax({
+              method: method,
+              url: 'https://' + api_server + '/1.1' + url,
+              headers: {
+                'X-LC-Id': 'XtdzaNNhj3QzwpLfEPRyPB4f-gzGzoHsz',
+                'X-LC-Key': 'PVBOEPyETkedTsomHnvrpC63',
+                'Content-Type': 'application/json',
+              },
+              data: data
+            });
+          };
+          
+            addCount(Counter);
+          
+        });
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
