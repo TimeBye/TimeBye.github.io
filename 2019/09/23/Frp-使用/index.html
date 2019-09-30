@@ -126,7 +126,7 @@
 <meta property="og:site_name" content="拾穗">
 <meta property="og:description" content="什么是 Frpfrp 是一个可用于内网穿透的高性能的反向代理应用，支持 tcp, udp 协议，为 http 和 https 应用协议提供了额外的能力，且尝试性支持了点对点穿透。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-25T16:29:18.522Z">
+<meta property="og:updated_time" content="2019-09-30T03:43:47.650Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Frp 使用">
 <meta name="twitter:description" content="什么是 Frpfrp 是一个可用于内网穿透的高性能的反向代理应用，支持 tcp, udp 协议，为 http 和 https 应用协议提供了额外的能力，且尝试性支持了点对点穿透。">
@@ -473,9 +473,40 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /etc/frp</span><br><span class="line">cat &gt; /etc/frp/frpc.ini &lt;&lt; EOF</span><br><span class="line"><span class="comment"># frpc.ini</span></span><br><span class="line">[common]</span><br><span class="line">server_addr = setzero.wenqi.us</span><br><span class="line">server_port = 7000</span><br><span class="line"><span class="comment"># 服务端和客户端的 common 配置中的 token 参数一致则身份验证通过。</span></span><br><span class="line">token = 07401b.f395accd246ae52d</span><br><span class="line"></span><br><span class="line">[ssh]</span><br><span class="line"><span class="built_in">type</span> = tcp</span><br><span class="line">local_ip = 127.0.0.1</span><br><span class="line">local_port = 22</span><br><span class="line">remote_port = 6000</span><br><span class="line"><span class="comment"># 加密</span></span><br><span class="line">use_encryption = <span class="literal">true</span></span><br><span class="line"><span class="comment"># 压缩</span></span><br><span class="line">use_compression = <span class="literal">true</span></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>容器运行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker run --name frpc \</span><br><span class="line">  --network host -d --restart=always \</span><br><span class="line">  -v /etc/frp/frpc.ini:/etc/frp/frpc.ini \</span><br><span class="line">  dockerhub.azk8s.cn/snowdreamtech/frpc:0.29.0</span><br></pre></td></tr></table></figure></li>
-</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker run --name frpc \</span><br><span class="line">  --network host -d --restart=always \</span><br><span class="line">  -v /etc/frp/frpc.ini:/etc/frp/frpc.ini \</span><br><span class="line">  dockerhub.azk8s.cn/snowdreamtech/frpc:0.29.0</span><br></pre></td></tr></table></figure>
 
+</li>
+</ul>
+<h3 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h3><p>简单使用时挂卷是一个比较麻烦的事情，使用环境变量进行设置比较优雅一点。</p>
+<details><summary>frps</summary>
+
+<ul>
+<li><p>Dockerfile</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> dockerhub.azk8s.cn/snowdreamtech/frps:<span class="number">0.29</span>.<span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ENV</span> FRPS_PORT=<span class="number">7000</span> \</span><br><span class="line">    FRPS_TOKEN=<span class="number">07401</span>b.f395accd246ae52d</span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> frps.ini /etc/frp/frps.ini</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>frps.ini</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># frps.ini</span></span><br><span class="line"><span class="section">[common]</span></span><br><span class="line"><span class="attr">bind_port</span> = &#123;&#123; .Envs.FRPS_PORT &#125;&#125;</span><br><span class="line"><span class="attr">token</span> = &#123;&#123; .Envs.FRPS_TOKEN &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</details>
+
+<details><summary>frpc</summary>
+
+<ul>
+<li><p>Dockerfile</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> dockerhub.azk8s.cn/snowdreamtech/frpc:<span class="number">0.29</span>.<span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ENV</span> FRPS_ADDR=<span class="number">127.0</span>.<span class="number">0.1</span> \</span><br><span class="line">    FRPS_PORT=<span class="number">7000</span> \</span><br><span class="line">    FRPS_TOKEN=<span class="number">07401</span>b.f395accd246ae52d \</span><br><span class="line">    FRPC_SECTION=ssh \</span><br><span class="line">    FRPC_ADDR=<span class="number">127.0</span>.<span class="number">0.1</span> \</span><br><span class="line">    FRPC_LOCAL_PORT=<span class="number">22</span> \</span><br><span class="line">    FRPC_REMOTE_PORT=<span class="number">6443</span> \</span><br><span class="line">    USE_ENCRYPTION=true \</span><br><span class="line">    USE_COMPRESSION=true</span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> frpc.ini /etc/frp/frpc.ini</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>frpc.ini</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># frpc.ini</span></span><br><span class="line"><span class="section">[common]</span></span><br><span class="line"><span class="attr">server_addr</span> = &#123;&#123; .Envs.FRPS_ADDR &#125;&#125;</span><br><span class="line"><span class="attr">server_port</span> = &#123;&#123; .Envs.FRPS_PORT &#125;&#125;</span><br><span class="line"><span class="attr">token</span> = &#123;&#123; .Envs.FRPS_TOKEN &#125;&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">[&#123;&#123; .Envs.FRPC_SECTION &#125;&#125;]</span></span><br><span class="line"><span class="attr">type</span> = tcp</span><br><span class="line"><span class="attr">local_ip</span> = &#123;&#123; .Envs.FRPC_ADDR &#125;&#125;</span><br><span class="line"><span class="attr">local_port</span> = &#123;&#123; .Envs.FRPC_LOCAL_PORT &#125;&#125;</span><br><span class="line"><span class="attr">remote_port</span> = &#123;&#123; .Envs.FRPC_REMOTE_PORT &#125;&#125;</span><br><span class="line"><span class="attr">use_encryption</span> = &#123;&#123; .Envs.USE_ENCRYPTION &#125;&#125;</span><br><span class="line"><span class="attr">use_compression</span> = &#123;&#123; .Envs.USE_COMPRESSION &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</details>
+
+<h4 id="服务端-1"><a href="#服务端-1" class="headerlink" title="服务端"></a>服务端</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run --name frps \</span><br><span class="line">  --network host -d --restart=always \</span><br><span class="line">  -e FRPS_PORT=7000 \</span><br><span class="line">  -e FRPS_TOKEN=07401b.f395accd246ae52d \</span><br><span class="line">  dockerhub.azk8s.cn/setzero/frps:0.29.0</span><br></pre></td></tr></table></figure>
+
+<h4 id="客户端-1"><a href="#客户端-1" class="headerlink" title="客户端"></a>客户端</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">docker run --name frpc \</span><br><span class="line">  --network host -d --restart=always \</span><br><span class="line">  -e FRPS_ADDR=127.0.0.1 \</span><br><span class="line">  -e FRPS_PORT=7000 \</span><br><span class="line">  -e FRPS_TOKEN=07401b.f395accd246ae52d \</span><br><span class="line">  -e FRPC_SECTION=ssh \</span><br><span class="line">  -e FRPC_ADDR=127.0.0.1 \</span><br><span class="line">  -e FRPC_LOCAL_PORT=22 \</span><br><span class="line">  -e FRPC_REMOTE_PORT=6443 \</span><br><span class="line">  -e USE_ENCRYPTION=<span class="literal">true</span> \</span><br><span class="line">  -e USE_COMPRESSION=<span class="literal">true</span> \</span><br><span class="line">  dockerhub.azk8s.cn/setzero/frpc:0.29.0</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -526,6 +557,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/30/自己做酸酸乳/" rel="prev" title="自己做酸酸乳">
+                自己做酸酸乳 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -598,7 +633,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-count">24</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -692,7 +727,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">27</span>
+                      
+                    
+                    <span class="site-state-item-count">28</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -756,7 +793,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是-Frp"><span class="nav-number">1.</span> <span class="nav-text">什么是 Frp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用示例"><span class="nav-number">2.</span> <span class="nav-text">使用示例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#服务端"><span class="nav-number">2.1.</span> <span class="nav-text">服务端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#客户端"><span class="nav-number">2.2.</span> <span class="nav-text">客户端</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是-Frp"><span class="nav-number">1.</span> <span class="nav-text">什么是 Frp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用示例"><span class="nav-number">2.</span> <span class="nav-text">使用示例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#服务端"><span class="nav-number">2.1.</span> <span class="nav-text">服务端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#客户端"><span class="nav-number">2.2.</span> <span class="nav-text">客户端</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#改进"><span class="nav-number">3.</span> <span class="nav-text">改进</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#服务端-1"><span class="nav-number">3.1.</span> <span class="nav-text">服务端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#客户端-1"><span class="nav-number">3.2.</span> <span class="nav-text">客户端</span></a></li></ol></li></ol></div>
             
 
           </div>
